@@ -1,6 +1,6 @@
 package com.michaels.designhub.colorpickerapi.controller;
 
-import com.michaels.designhub.colorpickerapi.common.dto.Result;
+import com.michaels.designhub.common.dto.Result;
 import com.michaels.designhub.colorpickerapi.service.impl.ColorPickerService;
 import org.junit.Assert;
 import org.junit.Test;

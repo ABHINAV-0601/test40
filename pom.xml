@@ -15,7 +15,12 @@
     <description>color-picker-api</description>
     <packaging>jar</packaging>
     <dependencies>
-
+        <dependency>
+            <groupId>com.michaels.designhub</groupId>
+            <artifactId>designhub-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
