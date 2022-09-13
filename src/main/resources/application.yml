@@ -1,0 +1,49 @@
+# common info
+server:
+  port: 8881
+  platform: dev
+  servlet:
+    context-path: /colorPicker
+spring:
+  #i18n
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+  # db info
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: ***REMOVED***
+    password: ***REMOVED***
+    url: jdbc:postgresql://10.11.33.90:5432/designhub_tst
+  jpa:
+    hibernate:
+      dialect: org.hibernate.dialect.PostgreSQL92Dialect
+      ddl-auto: update
+      globally_quoted_identifiers: true
+      format_sql: true
+    show-sql: true
+#HikariPool config
+hikari:
+  connection-timeout: 60000
+  validation-timeout: 3000
+  idle-timeout: 60000
+  login-timeout: 5
+  max-lifetime: 60000
+  maximum-pool-size: 10
+  minimum-idle: 10
+  read-only: false
+#Authorization check
+design:
+  hub:
+    token:
+      excludePathPatterns: /v1/**,
+    auth:
+      client_id: ***REMOVED***
+      client_secret: ***REMOVED***
+      url: https://signon.michaels.com/mga/sps/oauth/oauth20/introspect
+    promotions:
+      url: https://tibcoapiintegrationpre.michaels.com:443/promorequest
+# loginfo
+logging:
+  config:
+    classpath: logback.xml
