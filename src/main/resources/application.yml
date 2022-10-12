@@ -2,8 +2,6 @@
 server:
   port: 8881
   platform: dev
-  servlet:
-    context-path: /colorPicker
 spring:
   #i18n
   messages:
