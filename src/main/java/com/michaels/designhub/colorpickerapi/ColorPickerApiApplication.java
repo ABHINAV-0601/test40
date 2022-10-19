@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @Author: Qiang Hu
  * @Date: 9/1/2022 2:55 PM
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.michaels.designhub"})
 public class ColorPickerApiApplication {
 
     public static void main(String[] args) {
