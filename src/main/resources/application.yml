@@ -34,7 +34,7 @@ hikari:
 design:
   hub:
     token:
-      excludePathPatterns: /v1/**,
+      excludePathPatterns:
     auth:
       client_id: ***REMOVED***
       client_secret: ***REMOVED***
