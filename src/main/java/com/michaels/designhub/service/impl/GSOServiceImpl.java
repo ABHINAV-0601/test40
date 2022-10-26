@@ -4,11 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.michaels.designhub.common.utils.HttpUtil;
 import com.michaels.designhub.controller.GSOController;
+import com.michaels.designhub.dto.UtilsDto;
+import com.michaels.designhub.repository.ICommonDao;
 import com.michaels.designhub.repository.OrderRepository;
 import com.michaels.designhub.request.*;
 import com.michaels.designhub.service.GSOService;
 import com.michaels.designhub.response.*;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +22,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author Baojian Hong
@@ -31,24 +38,19 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@Slf4j
 public class GSOServiceImpl implements GSOService {
 
     @Autowired
     private OrderRepository orderRepository;
-
-    Logger logger = LoggerFactory.getLogger(GSOController.class);
 
     @Value("${dotNet.uri}")
     private String dotNetUrl;
     @Value("${dotNet.host}")
     private String dotNetHost;
 
-    @Value("${spring.datasource.url}")
-    private String url;
-    @Value("${spring.datasource.username}")
-    private String username;
-    @Value("${spring.datasource.password}")
-    private String password;
+    @Autowired
+    private ICommonDao commonDao;
 
 
     public SearchGSOAndLayoutOptimizationResponse utilsGso(SearchGSOAndLayoutOptimizationRequest searchGSOAndLayoutOptimizationRequest) {
@@ -75,7 +77,7 @@ public class GSOServiceImpl implements GSOService {
                 ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(dotNetHost + dotNetUrl, formEntity, String.class);
                 MPString = JSON.parseObject(stringResponseEntity.getBody());
                 MPDotNetResponse = JSONObject.toJavaObject(MPString, DotNetResponse.class);
-                logger.info("MP = " + MPDotNetResponse.toString());
+                log.info("MP = " + MPDotNetResponse.toString());
             } else if ("CP".equals(details.getGlass_type())) {
                 String req_info = JSON.toJSONString(details.getReq_info());
                 HttpHeaders headers = new HttpHeaders();
@@ -86,7 +88,7 @@ public class GSOServiceImpl implements GSOService {
                 ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(dotNetHost + dotNetUrl, formEntity, String.class);
                 CPString = JSON.parseObject(stringResponseEntity.getBody());
                 CPDotNetResponse = JSONObject.toJavaObject(CPString, DotNetResponse.class);
-                logger.info("CP = " + CPDotNetResponse.toString());
+                log.info("CP = " + CPDotNetResponse.toString());
             }
         }
         GetGsoNonPrintedLayout getGsoNonPrintedLayout = new GetGsoNonPrintedLayout();
@@ -149,5 +151,37 @@ public class GSOServiceImpl implements GSOService {
             return searchGSOAndLayoutOptimizationResponse;
         }
         return null;
+    }
+
+    @Override
+    public Map<String, Object> utils(UtilsDto utilsDto) {
+        log.debug("utils get data by :{}",utilsDto);
+        Map<String, Object> result = new HashMap<>();
+        result.put("module_name",utilsDto.getFunctionName());
+        if(!utilsDto.getIsFunction().booleanValue()){
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Content-Type","application/json");
+            String url = null;
+            try {
+                url = "http://"+utilsDto.getServiceHost()+utilsDto.getServicePort()+utilsDto.getServiceUri();
+                String obj = HttpUtil.post(url,JSON.toJSONString(utilsDto.getOrderParts()),headers);
+                if (!ObjectUtils.isEmpty(obj)) {
+                    result.put("module_params",obj);
+                }else{
+                    result.put("module_params","No Data Found");
+                }
+            } catch (Exception e) {
+                log.error("url {} get data fail：{}",url,e.getMessage());
+                result.put("module_params",e.getMessage());
+            }
+        }else{
+            Object obj = commonDao.callFunction(utilsDto);
+            if (!ObjectUtils.isEmpty(obj)) {
+                result.put("module_params",obj);
+            }else{
+                result.put("module_params","No Data Found");
+            }
+        }
+        return result;
     }
 }
