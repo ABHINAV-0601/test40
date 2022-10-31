@@ -17,7 +17,7 @@ spring:
     url: jdbc:postgresql://10.11.33.90:5432/designhub_tst
   jpa:
     hibernate:
-      dialect: org.hibernate.dialect.PostgreSQL92Dialect
+      dialect: com.michaels.designhub.config.PostgreSQL10JsonDialect
       ddl-auto: update
       globally_quoted_identifiers: true
       format_sql: true
