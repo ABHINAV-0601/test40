@@ -12,16 +12,21 @@ spring:
   # db info
   datasource:
     driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://ec2-3-217-53-211.compute-1.amazonaws.com:5432/ds2fo83ti1vo2?ssl=true&sslmode=allow&sslcert=C:\demo\postgresql.crt&sslkey=C:\demo\postgresql.pk8&sslrootcert=C:\demo\root.crt
     username: ***REMOVED***
     password: ***REMOVED***
-    url: jdbc:postgresql://10.11.33.90:5432/designhub_tst
   jpa:
     hibernate:
-      dialect: com.michaels.designhub.config.PostgreSQL10JsonDialect
+      dialect: org.hibernate.dialect.PostgreSQL92Dialect
       ddl-auto: update
       globally_quoted_identifiers: true
       format_sql: true
     show-sql: true
+    properties:
+      hibernate:
+        dialect: com.michaels.designhub.config.PostgreSQL10JsonDialect
+        ddl-auto: update
+        globally_quoted_identifiers: true
 #HikariPool config
 hikari:
   connection-timeout: 60000
