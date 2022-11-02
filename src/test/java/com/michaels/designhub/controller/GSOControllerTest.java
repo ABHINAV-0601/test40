@@ -35,7 +35,7 @@ class GSOControllerTest {
     }
 
     @Test
-    void testUtilsGso() throws SQLException, JsonProcessingException {
+    void testUtilsGso() throws Exception {
         when(gsoService.utilsGso(any())).thenReturn(new SearchGSOAndLayoutOptimizationResponse());
 
         SearchGSOAndLayoutOptimizationResponse result = gSOController.utilsGso(new SearchGSOAndLayoutOptimizationRequest());
