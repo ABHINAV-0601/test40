@@ -13,6 +13,7 @@ import com.michaels.designhub.request.*;
 import com.michaels.designhub.service.GSOService;
 import com.michaels.designhub.response.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,7 @@ public class GSOServiceImpl implements GSOService {
     private ICommonDao commonDao;
 
 
-    public SearchGSOAndLayoutOptimizationResponse utilsGso(SearchGSOAndLayoutOptimizationRequest searchGSOAndLayoutOptimizationRequest) {
+    public SearchGSOAndLayoutOptimizationResponse utilsGso(SearchGSOAndLayoutOptimizationRequest searchGSOAndLayoutOptimizationRequest) throws Exception {
         JSONObject requestJson = JSON.parseObject(JSON.toJSONString(searchGSOAndLayoutOptimizationRequest));
         Object object = null;
         ObjectMapper objectMapper = new ObjectMapper();
@@ -66,6 +67,9 @@ public class GSOServiceImpl implements GSOService {
         DotNetResponse CPDotNetResponse = new DotNetResponse();
         JSONObject CPString = null;
         JSONObject MPString = null;
+        if (getGsoGlassTypeReqRet.getDetails() == null || getGsoGlassTypeReqRet.getDetails().size() == 0){
+            throw new Exception("No relevant data found");
+        }
         for (Details details : getGsoGlassTypeReqRet.getDetails()) {
             if ("MP".equals(details.getGlass_type())) {
                 String req_info = JSON.toJSONString(details.getReq_info());
@@ -74,9 +78,14 @@ public class GSOServiceImpl implements GSOService {
                 headers.setContentType(type);
                 headers.add("Accept", MediaType.APPLICATION_JSON.toString());
                 HttpEntity<String> formEntity = new HttpEntity<String>(req_info, headers);
-                ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(dotNetHost + dotNetUrl, formEntity, String.class);
-                MPString = JSON.parseObject(stringResponseEntity.getBody());
-                MPDotNetResponse = JSONObject.toJavaObject(MPString, DotNetResponse.class);
+                try {
+                    ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(dotNetHost + dotNetUrl, formEntity, String.class);
+                    MPString = JSON.parseObject(stringResponseEntity.getBody());
+                    MPDotNetResponse = JSONObject.toJavaObject(MPString, DotNetResponse.class);
+                } catch (Exception e){
+                    throw new Exception(e.getMessage());
+                }
+
                 log.info("MP = " + MPDotNetResponse.toString());
             } else if ("CP".equals(details.getGlass_type())) {
                 String req_info = JSON.toJSONString(details.getReq_info());
@@ -85,9 +94,13 @@ public class GSOServiceImpl implements GSOService {
                 headers.setContentType(type);
                 headers.add("Accept", MediaType.APPLICATION_JSON.toString());
                 HttpEntity<String> formEntity = new HttpEntity<String>(req_info, headers);
-                ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(dotNetHost + dotNetUrl, formEntity, String.class);
-                CPString = JSON.parseObject(stringResponseEntity.getBody());
-                CPDotNetResponse = JSONObject.toJavaObject(CPString, DotNetResponse.class);
+                try {
+                    ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(dotNetHost + dotNetUrl, formEntity, String.class);
+                    CPString = JSON.parseObject(stringResponseEntity.getBody());
+                    CPDotNetResponse = JSONObject.toJavaObject(CPString, DotNetResponse.class);
+                } catch (Exception e){
+                    log.error("Request herokuApp fail, Status is CP");
+                }
                 log.info("CP = " + CPDotNetResponse.toString());
             }
         }

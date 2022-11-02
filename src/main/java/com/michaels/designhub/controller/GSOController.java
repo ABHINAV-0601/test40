@@ -30,7 +30,7 @@ public class GSOController {
     private GSOServiceImpl gsoService;
 
     @PostMapping("/utils/gso")
-    public SearchGSOAndLayoutOptimizationResponse utilsGso(@RequestBody SearchGSOAndLayoutOptimizationRequest searchGSOAndLayoutOptimizationRequest) throws JsonProcessingException, SQLException {
+    public SearchGSOAndLayoutOptimizationResponse utilsGso(@RequestBody SearchGSOAndLayoutOptimizationRequest searchGSOAndLayoutOptimizationRequest) throws Exception {
         log.info("In Search GSO and Optimization flow");
         log.info(searchGSOAndLayoutOptimizationRequest.toString());
         SearchGSOAndLayoutOptimizationResponse searchGSOAndLayoutOptimizationResponse = gsoService.utilsGso(searchGSOAndLayoutOptimizationRequest);
