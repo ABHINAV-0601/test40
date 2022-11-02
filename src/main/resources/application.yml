@@ -1,6 +1,6 @@
 # common info
 server:
-  port: 8086
+  port: 8080
   platform: dev
   servlet:
     context-path: /api
