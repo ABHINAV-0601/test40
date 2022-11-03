@@ -15,6 +15,15 @@ spring:
     url: jdbc:postgresql://10.11.33.90:5432/designhub_tst
     username: ***REMOVED***
     password: ***REMOVED***
+    hikari:
+      pool-name: DateHikariCP
+      minimum-idle: 10
+      idle-timeout: 180000
+      maximum-pool-size: 60
+      auto-commit: true
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
   jpa:
     hibernate:
       dialect: org.hibernate.dialect.PostgreSQL92Dialect
@@ -27,16 +36,6 @@ spring:
         dialect: com.michaels.designhub.config.PostgreSQL10JsonDialect
         ddl-auto: update
         globally_quoted_identifiers: true
-#HikariPool config
-hikari:
-  connection-timeout: 60000
-  validation-timeout: 3000
-  idle-timeout: 60000
-  login-timeout: 5
-  max-lifetime: 60000
-  maximum-pool-size: 10
-  minimum-idle: 10
-  read-only: false
 #Authorization check
 design:
   hub:
