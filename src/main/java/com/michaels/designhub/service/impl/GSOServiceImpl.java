@@ -4,8 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.michaels.designhub.common.utils.HttpUtil;
-import com.michaels.designhub.controller.GSOController;
 import com.michaels.designhub.dto.UtilsDto;
 import com.michaels.designhub.repository.ICommonDao;
 import com.michaels.designhub.repository.OrderRepository;
@@ -13,9 +11,6 @@ import com.michaels.designhub.request.*;
 import com.michaels.designhub.service.GSOService;
 import com.michaels.designhub.response.*;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -24,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
@@ -49,10 +45,10 @@ public class GSOServiceImpl implements GSOService {
     private String dotNetUrl;
     @Value("${dotNet.host}")
     private String dotNetHost;
-
     @Autowired
     private ICommonDao commonDao;
-
+    @Autowired
+    private RestTemplate restTemplate;
 
     public SearchGSOAndLayoutOptimizationResponse utilsGso(SearchGSOAndLayoutOptimizationRequest searchGSOAndLayoutOptimizationRequest) throws Exception {
         JSONObject requestJson = JSON.parseObject(JSON.toJSONString(searchGSOAndLayoutOptimizationRequest));
@@ -62,7 +58,6 @@ public class GSOServiceImpl implements GSOService {
 
         JSONObject jsonObject = JSON.parseObject(jsonNode.toString());
         GetGsoGlassTypeReqRet getGsoGlassTypeReqRet = JSONObject.toJavaObject(jsonObject, GetGsoGlassTypeReqRet.class);
-        RestTemplate restTemplate = new RestTemplate();
         DotNetResponse MPDotNetResponse = new DotNetResponse();
         DotNetResponse CPDotNetResponse = new DotNetResponse();
         JSONObject CPString = null;
@@ -172,14 +167,19 @@ public class GSOServiceImpl implements GSOService {
         Map<String, Object> result = new HashMap<>();
         result.put("module_name",utilsDto.getFunctionName());
         if(!utilsDto.getIsFunction().booleanValue()){
-            Map<String, String> headers = new HashMap<>();
-            headers.put("Content-Type","application/json");
             String url = null;
             try {
-                url = "http://"+utilsDto.getServiceHost()+utilsDto.getServicePort()+utilsDto.getServiceUri();
-                String obj = HttpUtil.post(url,JSON.toJSONString(utilsDto.getOrderParts()),headers);
+                url = "http://"+utilsDto.getServiceHost()+":"+utilsDto.getServicePort()+utilsDto.getServiceUri();
+                log.debug("utils get data url:{}",url);
+                HttpHeaders headers = new HttpHeaders();
+                MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+                headers.setContentType(type);
+                headers.add("Accept", MediaType.APPLICATION_JSON.toString());
+                // 封装HttpEntity
+                HttpEntity formEntity = new HttpEntity(JSON.toJSONString(utilsDto.getOrderParts()), headers);
+                String obj = restTemplate.postForObject(url, formEntity, String.class);
                 if (!ObjectUtils.isEmpty(obj)) {
-                    result.put("module_params",obj);
+                    result.put("module_params",JSON.parseObject(obj));
                 }else{
                     result.put("module_params","No Data Found");
                 }
@@ -188,9 +188,13 @@ public class GSOServiceImpl implements GSOService {
                 result.put("module_params",e.getMessage());
             }
         }else{
-            Object obj = commonDao.callFunction(utilsDto);
-            if (!ObjectUtils.isEmpty(obj)) {
-                result.put("module_params",obj);
+            String  obj = commonDao.callFunction(utilsDto).toString();
+            if (StringUtils.hasLength(obj)) {
+                if(obj.startsWith("[")){
+                    result.put("module_params",JSON.parseArray(obj));
+                }else{
+                    result.put("module_params",JSON.parseObject(obj));
+                }
             }else{
                 result.put("module_params","No Data Found");
             }
