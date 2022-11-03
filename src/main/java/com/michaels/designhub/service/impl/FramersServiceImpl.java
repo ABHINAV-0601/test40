@@ -27,7 +27,7 @@ public class FramersServiceImpl implements FramersService {
     @Override
     public Object getFramersByUsername(String username) {
         //"Fetch Framer details for username -" ++ vars.username
-        log.info("Fetch Framer details for username - " + username);
+        log.info("Fetch  Framer details for username - " + username);
         Framer framer = framersRepository.getFramersByUsername(username);
         if (framer == null) {
             Map<String, String> map = new HashMap<>();
