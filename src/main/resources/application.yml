@@ -5,6 +5,8 @@ server:
   servlet:
     context-path: /api
 spring:
+  application:
+    name: color-picker-api
   #i18n
   messages:
     basename: i18n/messages
@@ -12,9 +14,9 @@ spring:
   # db info
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://10.11.33.90:5432/designhub_tst
     username: ***REMOVED***
     password: ***REMOVED***
+    url: jdbc:postgresql://10.11.33.90:5432/designhub_tst
     hikari:
       pool-name: DateHikariCP
       minimum-idle: 10
