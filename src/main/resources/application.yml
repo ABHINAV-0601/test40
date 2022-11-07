@@ -1,4 +1,3 @@
-# common info
 server:
   port: 8080
   platform: dev
@@ -11,7 +10,7 @@ spring:
   messages:
     basename: i18n/messages
     encoding: UTF-8
-  # db info
+  #==== db info ====#
   datasource:
     driver-class-name: org.postgresql.Driver
     username: ***REMOVED***
@@ -38,7 +37,7 @@ spring:
         dialect: com.michaels.designhub.config.PostgreSQL10JsonDialect
         ddl-auto: update
         globally_quoted_identifiers: true
-#Authorization check
+#===== Authorization check ===== #
 design:
   hub:
     token:
@@ -49,11 +48,17 @@ design:
       url: https://signon.michaels.com/mga/sps/oauth/oauth20/introspect
     promotions:
       url: https://tibcoapiintegrationpre.michaels.com:443/promorequest
-# stag
+#===== stag ===== #
 dotNet:
   host: "https://dh-gso-dotnet-svc-stg.herokuapp.com"
   uri: "/api/v1/gso"
-# loginfo
+
+# ===== log===== #
 logging:
+  level:
+    root: ${LOG_LEVEL:INFO}
   config:
     classpath: logback.xml
+    path: ./log/${spring.application.name}
+
+
