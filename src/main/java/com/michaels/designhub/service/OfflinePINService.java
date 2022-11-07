@@ -1,5 +1,7 @@
 package com.michaels.designhub.service;
 
+import com.michaels.designhub.dto.UpdateOfflinePINRequest;
+import com.michaels.designhub.dto.UpdateOfflinePINResponse;
 import com.michaels.designhub.entity.OfflinePIN;
 
 /**
@@ -9,4 +11,6 @@ import com.michaels.designhub.entity.OfflinePIN;
  */
 public interface OfflinePINService {
     OfflinePIN getPin(String storeId);
+
+    UpdateOfflinePINResponse UpdatePin(UpdateOfflinePINRequest updateOfflinePINRequest);
 }

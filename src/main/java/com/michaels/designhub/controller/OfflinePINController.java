@@ -1,5 +1,7 @@
 package com.michaels.designhub.controller;
 
+import com.michaels.designhub.dto.UpdateOfflinePINRequest;
+import com.michaels.designhub.dto.UpdateOfflinePINResponse;
 import com.michaels.designhub.entity.OfflinePIN;
 import com.michaels.designhub.response.OfflinePINResponse;
 import com.michaels.designhub.service.OfflinePINService;
@@ -7,10 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author Baojian Hong
@@ -32,5 +31,10 @@ public class OfflinePINController {
         OfflinePINResponse offlinePINResponse = new OfflinePINResponse();
         BeanUtils.copyProperties(pin,offlinePINResponse);
         return offlinePINResponse;
+    }
+
+    @PatchMapping("/offline-pin")
+    public UpdateOfflinePINResponse UpdatePin(@RequestBody UpdateOfflinePINRequest updateOfflinePINRequest){
+        return offlinePINService.UpdatePin(updateOfflinePINRequest);
     }
 }
