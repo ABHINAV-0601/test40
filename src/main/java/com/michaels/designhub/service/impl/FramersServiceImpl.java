@@ -3,8 +3,8 @@ package com.michaels.designhub.service.impl;
 import com.michaels.designhub.entity.Framer;
 import com.michaels.designhub.repository.FramersRepository;
 import com.michaels.designhub.request.FramersRequest;
-import lombok.extern.log4j.Log4j2;
 import com.michaels.designhub.service.FramersService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Service
-@Log4j2
+@Slf4j
 public class FramersServiceImpl implements FramersService {
 
 
@@ -27,9 +27,10 @@ public class FramersServiceImpl implements FramersService {
     @Override
     public Object getFramersByUsername(String username) {
         //"Fetch Framer details for username -" ++ vars.username
-        log.info("Fetch  Framer details for username - " + username);
+        log.info("getFramersByUsername - Fetch  Framer details for username - {}." , username);
         Framer framer = framersRepository.getFramersByUsername(username);
         if (framer == null) {
+            log.warn("postFramers - No Framer Data Found.");
             Map<String, String> map = new HashMap<>();
             map.put("Message", "No Framer Data Found");
             return map;
@@ -41,6 +42,7 @@ public class FramersServiceImpl implements FramersService {
 
     @Override
     public Object postFramers(FramersRequest framersRequest) {
+        log.info("postFramers - Fetch post Framers params - {}." , framersRequest);
         int i = framersRepository.updateFramers(framersRequest.getUpdated_at(), framersRequest.getUsername());
         if (i == 0) {
             // add
@@ -49,6 +51,7 @@ public class FramersServiceImpl implements FramersService {
         Map<String, Object> map = new HashMap<>();
         map.put("status_code", i);
         if (i == 0) {
+            log.warn("postFramers - post Framers Failure.");
             map.put("status_message", "Failure");
         }else{
             map.put("status_message", "Success");

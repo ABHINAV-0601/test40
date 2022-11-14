@@ -3,6 +3,7 @@ package com.michaels.designhub.service.impl;
 import com.michaels.designhub.entity.ColorPicker;
 import com.michaels.designhub.repository.ColorPickerRepository;
 import com.michaels.designhub.service.IColorPickerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.List;
  * @Date: 9/1/2022 2:56 PM
  */
 @Service
+@Slf4j
 public class ColorPickerService implements IColorPickerService {
 
     @Autowired
@@ -21,6 +23,7 @@ public class ColorPickerService implements IColorPickerService {
 
     @Override
     public List<ColorPicker> findColorPickerByLocale() {
+        log.info("findColorPickerByLocale");
         return colorPickerRepository.findColorPickerByLocale();
     }
 }

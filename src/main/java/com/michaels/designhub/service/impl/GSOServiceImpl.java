@@ -3,13 +3,12 @@ package com.michaels.designhub.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.michaels.designhub.dto.UtilsDto;
 import com.michaels.designhub.repository.ICommonDao;
 import com.michaels.designhub.repository.OrderRepository;
 import com.michaels.designhub.request.*;
-import com.michaels.designhub.service.GSOService;
 import com.michaels.designhub.response.*;
+import com.michaels.designhub.service.GSOService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,9 +50,8 @@ public class GSOServiceImpl implements GSOService {
     private RestTemplate restTemplate;
 
     public SearchGSOAndLayoutOptimizationResponse utilsGso(SearchGSOAndLayoutOptimizationRequest searchGSOAndLayoutOptimizationRequest) throws Exception {
+        log.info("SearchGSOAndLayoutOptimizationResponse - utils Gso params : {},",searchGSOAndLayoutOptimizationRequest);
         JSONObject requestJson = JSON.parseObject(JSON.toJSONString(searchGSOAndLayoutOptimizationRequest));
-        Object object = null;
-        ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = orderRepository.get_gso_glasstype_req(requestJson.toJSONString());
 
         JSONObject jsonObject = JSON.parseObject(jsonNode.toString());
@@ -63,7 +61,8 @@ public class GSOServiceImpl implements GSOService {
         JSONObject CPString = null;
         JSONObject MPString = null;
         if (getGsoGlassTypeReqRet.getDetails() == null || getGsoGlassTypeReqRet.getDetails().size() == 0){
-            throw new Exception("No relevant data found");
+            log.error("SearchGSOAndLayoutOptimizationResponse - No relevant data found");
+            throw new Exception("SearchGSOAndLayoutOptimizationResponse - No relevant data found");
         }
         for (Details details : getGsoGlassTypeReqRet.getDetails()) {
             if ("MP".equals(details.getGlass_type())) {
@@ -78,10 +77,10 @@ public class GSOServiceImpl implements GSOService {
                     MPString = JSON.parseObject(stringResponseEntity.getBody());
                     MPDotNetResponse = JSONObject.toJavaObject(MPString, DotNetResponse.class);
                 } catch (Exception e){
+                    log.error("SearchGSOAndLayoutOptimizationResponse - Exception:{}",e.getMessage());
                     throw new Exception(e.getMessage());
                 }
-
-                log.info("MP = " + MPDotNetResponse.toString());
+                log.info("SearchGSOAndLayoutOptimizationResponse - MP = {}", MPDotNetResponse.toString());
             } else if ("CP".equals(details.getGlass_type())) {
                 String req_info = JSON.toJSONString(details.getReq_info());
                 HttpHeaders headers = new HttpHeaders();
@@ -94,9 +93,9 @@ public class GSOServiceImpl implements GSOService {
                     CPString = JSON.parseObject(stringResponseEntity.getBody());
                     CPDotNetResponse = JSONObject.toJavaObject(CPString, DotNetResponse.class);
                 } catch (Exception e){
-                    log.error("Request herokuApp fail, Status is CP");
+                    log.error("SearchGSOAndLayoutOptimizationResponse - Request herokuApp fail, Status is CP");
                 }
-                log.info("CP = " + CPDotNetResponse.toString());
+                log.info("SearchGSOAndLayoutOptimizationResponse - CP = " + CPDotNetResponse.toString());
             }
         }
         GetGsoNonPrintedLayout getGsoNonPrintedLayout = new GetGsoNonPrintedLayout();
@@ -158,12 +157,13 @@ public class GSOServiceImpl implements GSOService {
             }
             return searchGSOAndLayoutOptimizationResponse;
         }
+        log.warn("SearchGSOAndLayoutOptimizationResponse - result is null");
         return null;
     }
 
     @Override
     public Map<String, Object> utils(UtilsDto utilsDto) {
-        log.debug("utils get data by :{}",utilsDto);
+        log.debug("utils - utils get data params :{}",utilsDto);
         Map<String, Object> result = new HashMap<>();
         result.put("module_name",utilsDto.getFunctionName());
         if(!utilsDto.getIsFunction().booleanValue()){
@@ -184,7 +184,7 @@ public class GSOServiceImpl implements GSOService {
                     result.put("module_params","No Data Found");
                 }
             } catch (Exception e) {
-                log.error("url {} get data fail：{}",url,e.getMessage());
+                log.error("utils - url {} get data fail：{}",url,e.getMessage());
                 result.put("module_params",e.getMessage());
             }
         }else{
@@ -196,6 +196,7 @@ public class GSOServiceImpl implements GSOService {
                     result.put("module_params",JSON.parseObject(obj));
                 }
             }else{
+                log.warn("utils - No Data Found.");
                 result.put("module_params","No Data Found");
             }
         }

@@ -5,6 +5,7 @@ import com.michaels.designhub.dto.StoreGlassInventoryRequest;
 import com.michaels.designhub.dto.UpdateGlassInventoryRequest;
 import com.michaels.designhub.dto.FetchGlassInventoryResponse;
 import com.michaels.designhub.service.GlassInventoryService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Service
+@Slf4j
 public class GlassInventoryServiceImpl implements GlassInventoryService {
 
     @Autowired
@@ -25,7 +27,7 @@ public class GlassInventoryServiceImpl implements GlassInventoryService {
 
     @Override
     public Object get(String storeId) {
-
+        log.info("get - get GlassInventory by {}.",storeId);
         List<Map<String, Object>> list = framersRepository.getGlassInventory(storeId);
         if (!list.isEmpty() || list.size() != 0) {
             FetchGlassInventoryResponse fetchGlassInventoryResponse = new FetchGlassInventoryResponse();
@@ -33,6 +35,7 @@ public class GlassInventoryServiceImpl implements GlassInventoryService {
             fetchGlassInventoryResponse.setStore_glass_inventory(list);
             return fetchGlassInventoryResponse;
         } else {
+            log.warn("get - No Inventory data found.");
             Map<String, Object> map = new HashMap<>();
             map.put("Message", "No Inventory data found");
             return map;
@@ -41,18 +44,20 @@ public class GlassInventoryServiceImpl implements GlassInventoryService {
 
     @Override
     public Object update(UpdateGlassInventoryRequest updateGlassInventoryRequest) {
+        log.info("update - update GlassInventory params {}.",updateGlassInventoryRequest);
         Map<String, Object> map = new HashMap<>();
         map.put("status_code", 1);
         if (null == updateGlassInventoryRequest || null == updateGlassInventoryRequest.getStore_glass_inventory() || updateGlassInventoryRequest.getStore_glass_inventory().size() == 0) {
+            log.warn("update GlassInventory params check Failed.");
             map.put("status_code", 0);
             map.put("status_message", "Failed");
             return map;
         }
-
         List<StoreGlassInventoryRequest> store_glass_inventory = updateGlassInventoryRequest.getStore_glass_inventory();
         for (StoreGlassInventoryRequest storeGlassInventory : store_glass_inventory) {
             int i = framersRepository.update(storeGlassInventory.getStore_glass_inventory_id(),storeGlassInventory.getInventory_count());
             if (i == 0 && Integer.parseInt(map.get("status_code").toString()) != 0){
+                log.warn("update - update GlassInventory Failed.");
                 map.put("status_code", 0);
                 map.put("status_message", "Failed");
             }else{
