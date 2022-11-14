@@ -36,5 +36,6 @@ public class OfflinePINController {
     @PatchMapping("/offline-pin")
     public UpdateOfflinePINResponse UpdatePin(@RequestBody UpdateOfflinePINRequest updateOfflinePINRequest){
         return offlinePINService.UpdatePin(updateOfflinePINRequest);
+
     }
 }
