@@ -14,6 +14,5 @@ import java.util.List;
 public class DotNetResponse {
     private String cutGLib_version;
     private List<Layouts> layouts;
-//  private List<Log> log;
     private List<orderParts> unoptimized_order_parts;
 }

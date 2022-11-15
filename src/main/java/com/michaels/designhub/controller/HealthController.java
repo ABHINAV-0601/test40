@@ -21,13 +21,13 @@ public class HealthController {
 
     @GetMapping(value = "/v1/colors/ok", produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public Result ok() {
+    public Result<Object> ok() {
         return Result.success(ServerUtil.getServerInfo());
     }
 
     @GetMapping(value = "/v1/colors/version", produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public Result version() {
+    public Result<Object> version() {
         return Result.success(swaggerProperties);
     }
 }

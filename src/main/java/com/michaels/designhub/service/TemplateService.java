@@ -11,6 +11,7 @@ import java.util.List;
 
 @Service
 public class TemplateService {
+    public static final String SUCCESS = "Success";
     final
     TemplateRepo templateRepo;
 
@@ -31,7 +32,7 @@ public class TemplateService {
         if (code == 0){
             updateTemplateResponse.setStatusMessage("Invalid template_id");
         }else{
-            updateTemplateResponse.setStatusMessage("Success");
+            updateTemplateResponse.setStatusMessage(SUCCESS);
         }
         return updateTemplateResponse;
     }
@@ -45,20 +46,20 @@ public class TemplateService {
             template.setCreatedAt(date);
             template.setUpdateAc(date);
             template.setIsActive(true);
-            Template save = templateRepo.save(template);
+            templateRepo.save(template);
             // fail is error
             response.setStatusCode(1);
-            response.setStatusMessage("Success");
+            response.setStatusMessage(SUCCESS);
         }else if ("global".equals(template.getType())){
             int count = templateRepo.selectTemplateByTypeAndIsActive(template.getType());
             if (count < 3){
                 template.setCreatedAt(date);
                 template.setUpdateAc(date);
                 template.setIsActive(true);
-                Template save = templateRepo.save(template);
+                templateRepo.save(template);
                 // fail is error
                 response.setStatusCode(1);
-                response.setStatusMessage("Success");
+                response.setStatusMessage(SUCCESS);
             }else{
                 response.setStatusCode(200);
                 response.setStatusMessage("No records inserted ,max limit reached for the requested store for global type");
@@ -69,10 +70,10 @@ public class TemplateService {
                 template.setCreatedAt(date);
                 template.setUpdateAc(date);
                 template.setIsActive(true);
-                Template save = templateRepo.save(template);
+                templateRepo.save(template);
                 // fail is error
                 response.setStatusCode(1);
-                response.setStatusMessage("Success");
+                response.setStatusMessage(SUCCESS);
             }else{
                 response.setStatusCode(200);
                 response.setStatusMessage("No records inserted ,max limit reached for the requested store for local type");
