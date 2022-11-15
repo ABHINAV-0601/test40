@@ -2,8 +2,6 @@ package com.michaels.designhub.repository;
 
 import com.michaels.designhub.dto.UtilsDto;
 
-import java.util.Map;
-
 /**
  * @Description: ICommonDao
  * @Author: Qiang Hu

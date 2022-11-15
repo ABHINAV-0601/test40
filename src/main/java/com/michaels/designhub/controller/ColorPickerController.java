@@ -20,7 +20,7 @@ public class ColorPickerController {
 
     @ResponseBody
     @GetMapping("/colors")
-    public Result getColor() {
+    public Result<Object> getColor() {
         return Result.success(colorPickerService.findColorPickerByLocale());
     }
 }

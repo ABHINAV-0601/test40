@@ -37,6 +37,9 @@ import java.util.Map;
 @Slf4j
 public class GSOServiceImpl implements GSOService {
 
+    public static final String APPLICATION_JSON_CHARSET_UTF_8 = "application/json; charset=UTF-8";
+    public static final String ACCEPT = "Accept";
+    public static final String MODULE_PARAMS = "module_params";
     @Autowired
     private OrderRepository orderRepository;
 
@@ -55,12 +58,12 @@ public class GSOServiceImpl implements GSOService {
         JsonNode jsonNode = orderRepository.get_gso_glasstype_req(requestJson.toJSONString());
 
         JSONObject jsonObject = JSON.parseObject(jsonNode.toString());
-        GetGsoGlassTypeReqRet getGsoGlassTypeReqRet = JSONObject.toJavaObject(jsonObject, GetGsoGlassTypeReqRet.class);
+        GetGsoGlassTypeReqRet getGsoGlassTypeReqRet = JSON.toJavaObject(jsonObject, GetGsoGlassTypeReqRet.class);
         DotNetResponse MPDotNetResponse = new DotNetResponse();
         DotNetResponse CPDotNetResponse = new DotNetResponse();
         JSONObject CPString = null;
         JSONObject MPString = null;
-        if (getGsoGlassTypeReqRet.getDetails() == null || getGsoGlassTypeReqRet.getDetails().size() == 0){
+        if (getGsoGlassTypeReqRet.getDetails() == null || getGsoGlassTypeReqRet.getDetails().isEmpty()){
             log.error("SearchGSOAndLayoutOptimizationResponse - No relevant data found");
             throw new Exception("SearchGSOAndLayoutOptimizationResponse - No relevant data found");
         }
@@ -68,14 +71,14 @@ public class GSOServiceImpl implements GSOService {
             if ("MP".equals(details.getGlass_type())) {
                 String req_info = JSON.toJSONString(details.getReq_info());
                 HttpHeaders headers = new HttpHeaders();
-                MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+                MediaType type = MediaType.parseMediaType(APPLICATION_JSON_CHARSET_UTF_8);
                 headers.setContentType(type);
-                headers.add("Accept", MediaType.APPLICATION_JSON.toString());
-                HttpEntity<String> formEntity = new HttpEntity<String>(req_info, headers);
+                headers.add(ACCEPT, MediaType.APPLICATION_JSON.toString());
+                HttpEntity<String> formEntity = new HttpEntity<>(req_info, headers);
                 try {
                     ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(dotNetHost + dotNetUrl, formEntity, String.class);
                     MPString = JSON.parseObject(stringResponseEntity.getBody());
-                    MPDotNetResponse = JSONObject.toJavaObject(MPString, DotNetResponse.class);
+                    MPDotNetResponse = JSON.toJavaObject(MPString, DotNetResponse.class);
                 } catch (Exception e){
                     log.error("SearchGSOAndLayoutOptimizationResponse - Exception:{}",e.getMessage());
                     throw new Exception(e.getMessage());
@@ -84,14 +87,14 @@ public class GSOServiceImpl implements GSOService {
             } else if ("CP".equals(details.getGlass_type())) {
                 String req_info = JSON.toJSONString(details.getReq_info());
                 HttpHeaders headers = new HttpHeaders();
-                MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+                MediaType type = MediaType.parseMediaType(APPLICATION_JSON_CHARSET_UTF_8);
                 headers.setContentType(type);
-                headers.add("Accept", MediaType.APPLICATION_JSON.toString());
-                HttpEntity<String> formEntity = new HttpEntity<String>(req_info, headers);
+                headers.add(ACCEPT, MediaType.APPLICATION_JSON.toString());
+                HttpEntity<String> formEntity = new HttpEntity<>(req_info, headers);
                 try {
                     ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(dotNetHost + dotNetUrl, formEntity, String.class);
                     CPString = JSON.parseObject(stringResponseEntity.getBody());
-                    CPDotNetResponse = JSONObject.toJavaObject(CPString, DotNetResponse.class);
+                    CPDotNetResponse = JSON.toJavaObject(CPString, DotNetResponse.class);
                 } catch (Exception e){
                     log.error("SearchGSOAndLayoutOptimizationResponse - Request herokuApp fail, Status is CP");
                 }
@@ -103,7 +106,7 @@ public class GSOServiceImpl implements GSOService {
         getGsoNonPrintedLayout.setStore_id(searchGSOAndLayoutOptimizationRequest.getStore_id());
         if (MPDotNetResponse.getUnoptimized_order_parts() != null || CPDotNetResponse.getUnoptimized_order_parts() != null) {
             List<GetGsoNonPrintedLayoutDetails> list = new ArrayList<>();
-            if (MPDotNetResponse.getUnoptimized_order_parts() != null && MPDotNetResponse.getUnoptimized_order_parts().size() != 0) {
+            if (MPDotNetResponse.getUnoptimized_order_parts() != null && !MPDotNetResponse.getUnoptimized_order_parts().isEmpty()) {
                 GetGsoNonPrintedLayoutDetails details = new GetGsoNonPrintedLayoutDetails();
                 details.setGlass_type("MP");
                 GetGsoNonPrintedLayoutReqInfo reqInfo = new GetGsoNonPrintedLayoutReqInfo();
@@ -111,7 +114,7 @@ public class GSOServiceImpl implements GSOService {
                 details.setReq_info(reqInfo);
                 list.add(details);
             }
-            if (CPDotNetResponse.getUnoptimized_order_parts() != null && CPDotNetResponse.getUnoptimized_order_parts().size() != 0) {
+            if (CPDotNetResponse.getUnoptimized_order_parts() != null && !CPDotNetResponse.getUnoptimized_order_parts().isEmpty()) {
                 GetGsoNonPrintedLayoutDetails details = new GetGsoNonPrintedLayoutDetails();
                 details.setGlass_type("CP");
                 GetGsoNonPrintedLayoutReqInfo reqInfo = new GetGsoNonPrintedLayoutReqInfo();
@@ -121,10 +124,10 @@ public class GSOServiceImpl implements GSOService {
             }
             getGsoNonPrintedLayout.setDetails(list);
             requestJson = JSON.parseObject(JSON.toJSONString(getGsoNonPrintedLayout));
-            System.out.println(requestJson.toJSONString());
+            log.debug("requestJson = {}",requestJson.toJSONString());
             JsonNode jsonNode1 = orderRepository.get_gso_non_printed_layout(requestJson.toJSONString());
             JSONObject jsonObject1 = JSON.parseObject(jsonNode1.toString());
-            NonPrintedLayoutParent nonPrintedLayoutParent = JSONObject.toJavaObject(jsonObject1, NonPrintedLayoutParent.class);
+            NonPrintedLayoutParent nonPrintedLayoutParent = JSON.toJavaObject(jsonObject1, NonPrintedLayoutParent.class);
             List<Integer> ids = new ArrayList<>();
             // update
             for (int i = 0; i < searchGSOAndLayoutOptimizationRequest.getOrder_lineitem_ids().size(); i++) {
@@ -144,14 +147,14 @@ public class GSOServiceImpl implements GSOService {
             if (CPString != null) {
                 PrintedLayout cp = new PrintedLayout();
                 cp.setGlass_type("CP");
-                ResponseInfo response_info = JSONObject.toJavaObject(CPString, ResponseInfo.class);
+                ResponseInfo response_info = JSON.toJavaObject(CPString, ResponseInfo.class);
                 cp.setResponse_info(response_info);
                 printedLayoutList.add(cp);
             }
             if (MPString != null) {
                 PrintedLayout mp = new PrintedLayout();
                 mp.setGlass_type("MP");
-                ResponseInfo response_info = JSONObject.toJavaObject(MPString, ResponseInfo.class);
+                ResponseInfo response_info = JSON.toJavaObject(MPString, ResponseInfo.class);
                 mp.setResponse_info(response_info);
                 printedLayoutList.add(mp);
             }
@@ -172,32 +175,32 @@ public class GSOServiceImpl implements GSOService {
                 url = "http://"+utilsDto.getServiceHost()+":"+utilsDto.getServicePort()+utilsDto.getServiceUri();
                 log.debug("utils get data url:{}",url);
                 HttpHeaders headers = new HttpHeaders();
-                MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+                MediaType type = MediaType.parseMediaType(APPLICATION_JSON_CHARSET_UTF_8);
                 headers.setContentType(type);
-                headers.add("Accept", MediaType.APPLICATION_JSON.toString());
-                // 封装HttpEntity
-                HttpEntity formEntity = new HttpEntity(JSON.toJSONString(utilsDto.getOrderParts()), headers);
+                headers.add(ACCEPT, MediaType.APPLICATION_JSON.toString());
+                // HttpEntity
+                HttpEntity<?> formEntity = new HttpEntity<>(JSON.toJSONString(utilsDto.getOrderParts()), headers);
                 String obj = restTemplate.postForObject(url, formEntity, String.class);
                 if (!ObjectUtils.isEmpty(obj)) {
-                    result.put("module_params",JSON.parseObject(obj));
+                    result.put(MODULE_PARAMS,JSON.parseObject(obj));
                 }else{
-                    result.put("module_params","No Data Found");
+                    result.put(MODULE_PARAMS,"No Data Found");
                 }
             } catch (Exception e) {
                 log.error("utils - url {} get data fail：{}",url,e.getMessage());
-                result.put("module_params",e.getMessage());
+                result.put(MODULE_PARAMS,e.getMessage());
             }
         }else{
             String  obj = commonDao.callFunction(utilsDto).toString();
             if (StringUtils.hasLength(obj)) {
                 if(obj.startsWith("[")){
-                    result.put("module_params",JSON.parseArray(obj));
+                    result.put(MODULE_PARAMS,JSON.parseArray(obj));
                 }else{
-                    result.put("module_params",JSON.parseObject(obj));
+                    result.put(MODULE_PARAMS,JSON.parseObject(obj));
                 }
             }else{
                 log.warn("utils - No Data Found.");
-                result.put("module_params","No Data Found");
+                result.put(MODULE_PARAMS,"No Data Found");
             }
         }
         return result;
