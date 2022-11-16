@@ -1,6 +1,6 @@
 package com.michaels.designhub.controller;
 
-import com.michaels.designhub.common.dto.Result;
+import com.michaels.designhub.entity.ColorPicker;
 import com.michaels.designhub.service.impl.ColorPickerService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,6 +8,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Mockito.when;
 
@@ -22,8 +26,9 @@ public class ColorPickerControllerTest {
 
     @Test
     public void getColorsTest() {
-        when(colorPickerService.findColorPickerByLocale()).thenReturn(null);
-        Result result = ColorPickerController.getColor();
+        List<ColorPicker> list = new ArrayList<>();
+        when(colorPickerService.findColorPickerByLocale()).thenReturn(list);
+        Map<String,Object> result = ColorPickerController.getColor(null);
         Assert.assertNotNull(result);
     }
 }
