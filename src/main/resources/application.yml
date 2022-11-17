@@ -20,7 +20,7 @@ spring:
       pool-name: DateHikariCP
       minimum-idle: 10
       idle-timeout: 60000
-      maximum-pool-size: 60
+      maximum-pool-size: 80
       auto-commit: true
       max-lifetime: 60000
       connection-timeout: 30000
