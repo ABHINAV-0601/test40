@@ -62,7 +62,7 @@ public class TemplateService {
                 response.setStatusMessage(SUCCESS);
             }else{
                 response.setStatusCode(200);
-                response.setStatusMessage("No records inserted ,max limit reached for the requested store for global type");
+                response.setStatusMessage("No records inserted ,max limit reached for the requested store for global type.");
             }
         }else {
             int count = templateRepo.selectCoutByTypeAndIsActiveAndStoreId(template.getType(),template.getStoreId());
@@ -76,7 +76,7 @@ public class TemplateService {
                 response.setStatusMessage(SUCCESS);
             }else{
                 response.setStatusCode(200);
-                response.setStatusMessage("No records inserted ,max limit reached for the requested store for local type");
+                response.setStatusMessage("No records inserted ,max limit reached for the requested store for local type.");
             }
         }
         return response;
