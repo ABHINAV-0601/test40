@@ -13,9 +13,9 @@ spring:
   #==== db info ====#
   datasource:
     driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://ec2-3-217-53-211.compute-1.amazonaws.com:5432/ds2fo83ti1vo2?ssl=true&sslmode=allow&sslcert=D:\michaels\DB\postgresql.crt&sslkey=D:\michaels\DB\postgresql.pk8&sslrootcert=D:\michaels\DB\root.crt
     username: ***REMOVED***
     password: ***REMOVED***
-    url: jdbc:postgresql://10.11.33.90:5432/designhub_tst
     hikari:
       pool-name: DateHikariCP
       minimum-idle: 10
