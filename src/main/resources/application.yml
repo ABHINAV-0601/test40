@@ -23,7 +23,7 @@ spring:
       maximum-pool-size: 80
       auto-commit: true
       max-lifetime: 60000
-      connection-timeout: 30000
+      connection-timeout: 40000
       connection-test-query: SELECT 1
   jpa:
     hibernate:
