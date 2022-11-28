@@ -13,7 +13,7 @@ spring:
   #==== db info ====#
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://ec2-3-217-53-211.compute-1.amazonaws.com:5432/ds2fo83ti1vo2?ssl=true&sslmode=allow&sslcert=D:\michaels\DB\postgresql.crt&sslkey=D:\michaels\DB\postgresql.pk8&sslrootcert=D:\michaels\DB\root.crt
+    url: jdbc:postgresql://ec2-3-217-53-211.compute-1.amazonaws.com:5432/ds2fo83ti1vo2?sslmode=require&sslrootcert=./certs/root.crt&sslcert=./certs/postgresql.crt&sslkey=./certs/postgresql.pk8
     username: ***REMOVED***
     password: ***REMOVED***
     hikari:
