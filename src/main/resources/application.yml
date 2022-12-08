@@ -53,7 +53,7 @@ dotNet:
   host: "https://dh-gso-dotnet-svc-stg.herokuapp.com"
   uri: "/api/v1/gso"
 
-# ===== log===== #
+# ===== log===== # 
 logging:
   level:
     root: ${LOG_LEVEL:INFO}
