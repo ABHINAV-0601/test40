@@ -179,7 +179,7 @@ public class GSOServiceImpl implements GSOService {
                 headers.setContentType(type);
                 headers.add(ACCEPT, MediaType.APPLICATION_JSON.toString());
                 // HttpEntity
-                HttpEntity<?> formEntity = new HttpEntity<>(JSON.toJSONString(utilsDto.getOrderParts()), headers);
+                HttpEntity<?> formEntity = new HttpEntity<>(JSON.toJSONString(utilsDto.getServiceParams()), headers);
                 String obj = restTemplate.postForObject(url, formEntity, String.class);
                 if (!ObjectUtils.isEmpty(obj)) {
                     result.put(MODULE_PARAMS,JSON.parseObject(obj));
