@@ -1,9 +1,8 @@
 package com.michaels.designhub.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.michaels.designhub.request.SearchGSOAndLayoutOptimizationRequest;
 import com.michaels.designhub.response.SearchGSOAndLayoutOptimizationResponse;
-import com.michaels.designhub.service.impl.GSOServiceImpl;
+import com.michaels.designhub.service.impl.UtilsServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,8 +11,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 
-import java.sql.SQLException;
-
 import static org.mockito.Mockito.*;
 
 /**
@@ -21,13 +18,13 @@ import static org.mockito.Mockito.*;
  * @Date 2022/10/26 11:27
  * @Version 1.0
  */
-class GSOControllerTest {
+class UtilsControllerTest {
     @Mock
     Logger logger;
     @Mock
-    GSOServiceImpl gsoService;
+    UtilsServiceImpl utilsService;
     @InjectMocks
-    GSOController gSOController;
+    UtilsController utilsController;
 
     @BeforeEach
     void setUp() {
@@ -36,9 +33,9 @@ class GSOControllerTest {
 
     @Test
     void testUtilsGso() throws Exception {
-        when(gsoService.utilsGso(any())).thenReturn(new SearchGSOAndLayoutOptimizationResponse());
+        when(utilsService.utilsGso(any())).thenReturn(new SearchGSOAndLayoutOptimizationResponse());
 
-        SearchGSOAndLayoutOptimizationResponse result = gSOController.utilsGso(new SearchGSOAndLayoutOptimizationRequest());
+        SearchGSOAndLayoutOptimizationResponse result = utilsController.utilsGso(new SearchGSOAndLayoutOptimizationRequest());
         Assertions.assertEquals(new SearchGSOAndLayoutOptimizationResponse(), result);
     }
 }
