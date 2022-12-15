@@ -3,8 +3,8 @@ package com.michaels.designhub.repository.impl;
 import com.michaels.designhub.dto.UtilsDto;
 import com.michaels.designhub.repository.ICommonDao;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Repository;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.ParameterMode;
@@ -27,6 +27,7 @@ public class CommonDao implements ICommonDao {
     public Object callFunction(UtilsDto utilsDto) {
         var target = entityManager.getEntityManagerFactory().createEntityManager();
         try {
+            target.getTransaction().begin();
             StoredProcedureQuery query = target.createStoredProcedureQuery(utilsDto.getFunctionName());
             String functionalParams = utilsDto.getFunctionParams();
             if(StringUtils.isNotEmpty(functionalParams)){
@@ -34,12 +35,11 @@ public class CommonDao implements ICommonDao {
                 query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
                 query.setParameter(1, functionalParams);
             }
-            query.execute();
+            query.executeUpdate();
+            target.getTransaction().commit();
             return query.getSingleResult();
         }catch (Exception e){
-            log.error("callFunction err:{}",e.getMessage());
-            e.getStackTrace();
-
+            log.error("callFunction err:{}",e);
         }
         return null;
     }
