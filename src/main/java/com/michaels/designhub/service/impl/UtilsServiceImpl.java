@@ -8,7 +8,7 @@ import com.michaels.designhub.repository.ICommonDao;
 import com.michaels.designhub.repository.OrderRepository;
 import com.michaels.designhub.request.*;
 import com.michaels.designhub.response.*;
-import com.michaels.designhub.service.GSOService;
+import com.michaels.designhub.service.UtilsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +35,7 @@ import java.util.Map;
  */
 @Service
 @Slf4j
-public class GSOServiceImpl implements GSOService {
+public class UtilsServiceImpl implements UtilsService {
 
     public static final String APPLICATION_JSON_CHARSET_UTF_8 = "application/json; charset=UTF-8";
     public static final String ACCEPT = "Accept";

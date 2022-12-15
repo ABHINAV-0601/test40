@@ -3,7 +3,7 @@ package com.michaels.designhub.controller;
 import com.michaels.designhub.dto.UtilsDto;
 import com.michaels.designhub.request.SearchGSOAndLayoutOptimizationRequest;
 import com.michaels.designhub.response.SearchGSOAndLayoutOptimizationResponse;
-import com.michaels.designhub.service.impl.GSOServiceImpl;
+import com.michaels.designhub.service.impl.UtilsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,22 +21,22 @@ import java.util.Map;
 @RestController
 @RequestMapping("/v1")
 @Slf4j
-public class GSOController {
+public class UtilsController {
     @Autowired
-    private GSOServiceImpl gsoService;
+    private UtilsServiceImpl utilsService;
 
     @PostMapping("/utils/gso")
     public SearchGSOAndLayoutOptimizationResponse utilsGso(@RequestBody SearchGSOAndLayoutOptimizationRequest searchGSOAndLayoutOptimizationRequest) throws Exception {
-        log.info("In Search GSO and Optimization flow.");
+        log.info("In Search GSO and Optimization flow");
         log.info(searchGSOAndLayoutOptimizationRequest.toString());
-        SearchGSOAndLayoutOptimizationResponse searchGSOAndLayoutOptimizationResponse = gsoService.utilsGso(searchGSOAndLayoutOptimizationRequest);
+        SearchGSOAndLayoutOptimizationResponse searchGSOAndLayoutOptimizationResponse = utilsService.utilsGso(searchGSOAndLayoutOptimizationRequest);
         return searchGSOAndLayoutOptimizationResponse;
     }
 
     @PostMapping("/utils")
     public Map<String,Object> utils(@RequestBody UtilsDto utilsDto) {
-        log.info("In Search GSO and Optimization flow.");
-        Map<String,Object> result = gsoService.utils(utilsDto);
+        log.info("In Utils and calling function - {}", utilsDto.getFunctionName());
+        Map<String,Object> result = utilsService.utils(utilsDto);
         return result;
     }
 }

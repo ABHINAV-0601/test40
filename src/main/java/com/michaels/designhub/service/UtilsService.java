@@ -11,7 +11,7 @@ import java.util.Map;
  * @Date 2022/8/31 14:54
  * @Version 1.0
  */
-public interface GSOService {
+public interface UtilsService {
 
     public SearchGSOAndLayoutOptimizationResponse utilsGso(SearchGSOAndLayoutOptimizationRequest searchGSOAndLayoutOptimizationRequest) throws Exception;
 
