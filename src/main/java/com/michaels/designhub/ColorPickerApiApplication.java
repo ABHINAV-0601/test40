@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  * @Description: ColorPickerApiApplication
- * @Author: Qiang Hu
+ * @Author: Qiang  Hu
  * @Date: 9/1/2022 2:55 PM
  */
 @SpringBootApplication
