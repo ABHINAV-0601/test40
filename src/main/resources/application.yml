@@ -3,6 +3,10 @@ server:
   platform: dev
   servlet:
     context-path: /api
+management:
+  endpoints:
+    web:
+      base-path: /promotions
 spring:
   application:
     name: color-picker-api
