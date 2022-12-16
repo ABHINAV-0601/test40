@@ -4,6 +4,7 @@ import com.michaels.designhub.dto.UtilsDto;
 import com.michaels.designhub.repository.ICommonDao;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.procedure.ProcedureOutputs;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -26,20 +27,22 @@ public class CommonDao implements ICommonDao {
     @Override
     public Object callFunction(UtilsDto utilsDto) {
         var target = entityManager.getEntityManagerFactory().createEntityManager();
+        StoredProcedureQuery query = target.createStoredProcedureQuery(utilsDto.getFunctionName());
         try {
-            target.getTransaction().begin();
-            StoredProcedureQuery query = target.createStoredProcedureQuery(utilsDto.getFunctionName());
+
             String functionalParams = utilsDto.getFunctionParams();
             if(StringUtils.isNotEmpty(functionalParams)){
                 functionalParams = StringUtils.strip(functionalParams,"\'");
                 query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
                 query.setParameter(1, functionalParams);
             }
-            query.executeUpdate();
-            target.getTransaction().commit();
+
             return query.getSingleResult();
+
         }catch (Exception e){
-            log.error("callFunction err:{}",e);
+            log.error("Error occurred while calling function - {}",utilsDto.getFunctionName(),e);
+        } finally {
+            query.unwrap(ProcedureOutputs.class).release();
         }
         return null;
     }
