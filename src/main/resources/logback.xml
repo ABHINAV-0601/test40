@@ -86,6 +86,13 @@
             <MaxFileSize>10MB</MaxFileSize>
         </rollingPolicy>
     </appender>
+    <logger name="com.zaxxer.hikari" level="debug" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="DEBUG"/>
+        <appender-ref ref="INFO"/>
+        <appender-ref ref="WARN"/>
+        <appender-ref ref="ERROR"/>
+    </logger>
     <root name="com.michaels.designhub" level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="DEBUG"/>

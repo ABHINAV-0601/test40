@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.ParameterMode;
 import javax.persistence.PersistenceContext;
 import javax.persistence.StoredProcedureQuery;
+import java.util.Objects;
 
 /**
  * @Description: CommonDao
@@ -26,23 +27,18 @@ public class CommonDao implements ICommonDao {
 
     @Override
     public Object callFunction(UtilsDto utilsDto) {
-        var target = entityManager.getEntityManagerFactory().createEntityManager();
-        StoredProcedureQuery query = target.createStoredProcedureQuery(utilsDto.getFunctionName());
         try {
-
+            StoredProcedureQuery query = entityManager.createStoredProcedureQuery(utilsDto.getFunctionName());
             String functionalParams = utilsDto.getFunctionParams();
-            if(StringUtils.isNotEmpty(functionalParams)){
+            if(Objects.nonNull(functionalParams)){
                 functionalParams = StringUtils.strip(functionalParams,"\'");
                 query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
                 query.setParameter(1, functionalParams);
             }
-
             return query.getSingleResult();
 
         }catch (Exception e){
             log.error("Error occurred while calling function - {}",utilsDto.getFunctionName(),e);
-        } finally {
-            query.unwrap(ProcedureOutputs.class).release();
         }
         return null;
     }
