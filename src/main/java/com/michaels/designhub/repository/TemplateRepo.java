@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface TemplateRepo extends JpaRepository<Template, Integer> {
 
-    @Query(nativeQuery = true, value = "SELECT * from design_template where is_active = true and (type in ('global','default') or (type = 'local' and store_id = :storeId )) order by created_at desc limit 2")
+    @Query(nativeQuery = true, value = "SELECT * from design_template where is_active = true and (type in ('global','default') or (type = 'local' and store_id = :storeId )) order by created_at desc ")
     List<Template> findTemplateByStoreId(String storeId);
 
 
