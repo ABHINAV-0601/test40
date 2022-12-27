@@ -3,14 +3,11 @@ package com.michaels.designhub.repository.impl;
 import com.michaels.designhub.dto.UtilsDto;
 import com.michaels.designhub.repository.ICommonDao;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.procedure.ProcedureOutputs;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.ParameterMode;
 import javax.persistence.PersistenceContext;
-import javax.persistence.StoredProcedureQuery;
+import javax.persistence.Query;
 import java.util.Objects;
 
 /**
@@ -28,18 +25,21 @@ public class CommonDao implements ICommonDao {
     @Override
     public Object callFunction(UtilsDto utilsDto) {
         try {
-            StoredProcedureQuery query = entityManager.createStoredProcedureQuery(utilsDto.getFunctionName());
+            StringBuilder nativeQuery = new StringBuilder("select " + utilsDto.getFunctionName());
             String functionalParams = utilsDto.getFunctionParams();
-            if(Objects.nonNull(functionalParams)){
-                functionalParams = StringUtils.strip(functionalParams,"\'");
-                query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
-                query.setParameter(1, functionalParams);
+            nativeQuery.append("(");
+            if (Objects.nonNull(functionalParams)) {
+                nativeQuery.append(functionalParams);
             }
+            nativeQuery.append(")");
+
+            Query query = entityManager.createNativeQuery(nativeQuery.toString());
+
             return query.getSingleResult();
 
         }catch (Exception e){
-            log.error("Error occurred while calling function - {}",utilsDto.getFunctionName(),e);
+            log.error("Error occurred while calling function - {}",utilsDto.getFunctionName());
+            throw e;
         }
-        return null;
     }
 }
