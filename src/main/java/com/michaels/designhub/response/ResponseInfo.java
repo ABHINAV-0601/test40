@@ -1,5 +1,7 @@
 package com.michaels.designhub.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -10,10 +12,16 @@ import java.util.List;
  * @Version 1.0
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ResponseInfo {
 
-    private String cutGLib_version;
+    @JsonProperty("cutGLib_version")
+    private String cutGLibVersion;
+
     private List<Layouts> layouts;
+
     private List<String> log;
-    private List<UnoptimizedOrderParts> unoptimized_order_parts;
+
+    @JsonProperty("unoptimized_order_parts")
+    private List<UnoptimizedOrderParts> unoptimizedOrderParts;
 }

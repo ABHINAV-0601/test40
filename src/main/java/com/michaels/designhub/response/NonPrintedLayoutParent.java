@@ -1,5 +1,7 @@
 package com.michaels.designhub.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -10,7 +12,11 @@ import java.util.List;
  * @Version 1.0
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NonPrintedLayoutParent {
-    private String store_id;
-    private List<NonPrintedLayout> non_printed_layout;
+    @JsonProperty("store_id")
+    private String storeId;
+
+    @JsonProperty("non-printed-layout")
+    private List<NonPrintedLayout> nonPrintedLayout;
 }

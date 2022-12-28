@@ -1,5 +1,7 @@
 package com.michaels.designhub.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -10,9 +12,14 @@ import java.util.List;
  * @Version 1.0
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchGSOAndLayoutOptimizationResponse {
+    @JsonProperty("store_id")
+    private String storeId;
 
-    private String store_id;
-    private List<PrintedLayout> printed_layout;
-    private NonPrintedLayoutParent non_printed_layout;
+    @JsonProperty("printed-layout")
+    private List<PrintedLayout> printedLayouts;
+
+    @JsonProperty("non-printed-layout")
+    private NonPrintedLayoutParent nonPrintedLayoutParent;
 }

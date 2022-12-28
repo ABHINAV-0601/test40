@@ -1,5 +1,7 @@
 package com.michaels.designhub.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -10,7 +12,12 @@ import java.util.List;
  * @Version 1.0
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NonPrintedLayout {
-    private String glass_type;
+
+    @JsonProperty("glass_type")
+    private String glassType;
+
+    @JsonProperty("glass_details")
     private List<GlassDetails> glassDetails;
 }
