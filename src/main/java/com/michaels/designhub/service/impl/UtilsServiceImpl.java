@@ -23,10 +23,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author Baojian Hong
@@ -191,12 +188,13 @@ public class UtilsServiceImpl implements UtilsService {
                 result.put(MODULE_PARAMS,e.getMessage());
             }
         }else{
-            String  obj = commonDao.callFunction(utilsDto).toString();
-            if (StringUtils.hasLength(obj)) {
-                if(obj.startsWith("[")){
-                    result.put(MODULE_PARAMS,JSON.parseArray(obj));
+            Object  obj = commonDao.callFunction(utilsDto);
+            if (Objects.nonNull(obj)) {
+                String response = obj.toString();
+                if(response.startsWith("[")){
+                    result.put(MODULE_PARAMS,JSON.parseArray(response));
                 }else{
-                    result.put(MODULE_PARAMS,JSON.parseObject(obj));
+                    result.put(MODULE_PARAMS,JSON.parseObject(response));
                 }
             }else{
                 log.warn("utils - No Data Found.");

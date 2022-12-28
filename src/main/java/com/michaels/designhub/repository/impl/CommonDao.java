@@ -38,8 +38,7 @@ public class CommonDao implements ICommonDao {
             return query.getSingleResult();
 
         }catch (Exception e){
-            log.error("Error occurred while calling function - {}",utilsDto.getFunctionName());
-            throw e;
+            throw new RuntimeException("Error occurred while calling function - "+utilsDto.getFunctionName(),e);
         }
     }
 }
