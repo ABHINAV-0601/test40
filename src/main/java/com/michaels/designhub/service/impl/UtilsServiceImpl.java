@@ -18,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
@@ -138,21 +137,21 @@ public class UtilsServiceImpl implements UtilsService {
 
             SearchGSOAndLayoutOptimizationResponse searchGSOAndLayoutOptimizationResponse = new SearchGSOAndLayoutOptimizationResponse();
             List<PrintedLayout> printedLayoutList = new ArrayList<>();
-            searchGSOAndLayoutOptimizationResponse.setStore_id(searchGSOAndLayoutOptimizationRequest.getStore_id());
-            searchGSOAndLayoutOptimizationResponse.setPrinted_layout(printedLayoutList);
-            searchGSOAndLayoutOptimizationResponse.setNon_printed_layout(nonPrintedLayoutParent);
+            searchGSOAndLayoutOptimizationResponse.setStoreId(searchGSOAndLayoutOptimizationRequest.getStore_id());
+            searchGSOAndLayoutOptimizationResponse.setPrintedLayouts(printedLayoutList);
+            searchGSOAndLayoutOptimizationResponse.setNonPrintedLayoutParent(nonPrintedLayoutParent);
             if (CPString != null) {
                 PrintedLayout cp = new PrintedLayout();
-                cp.setGlass_type("CP");
+                cp.setGlassType("CP");
                 ResponseInfo response_info = JSON.toJavaObject(CPString, ResponseInfo.class);
-                cp.setResponse_info(response_info);
+                cp.setResponseInfo(response_info);
                 printedLayoutList.add(cp);
             }
             if (MPString != null) {
                 PrintedLayout mp = new PrintedLayout();
-                mp.setGlass_type("MP");
+                mp.setGlassType("MP");
                 ResponseInfo response_info = JSON.toJavaObject(MPString, ResponseInfo.class);
-                mp.setResponse_info(response_info);
+                mp.setResponseInfo(response_info);
                 printedLayoutList.add(mp);
             }
             return searchGSOAndLayoutOptimizationResponse;

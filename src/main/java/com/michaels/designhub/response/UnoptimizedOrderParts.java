@@ -2,6 +2,8 @@ package com.michaels.designhub.response;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * @Author Baojian Hong
  * @Date 2022/8/31 14:31
@@ -9,7 +11,8 @@ import lombok.Data;
  */
 @Data
 public class UnoptimizedOrderParts {
-    private int width;
-    private int height;
+    private BigDecimal width;
+    private BigDecimal height;
     private String orderId;
+    private Integer quantity;
 }

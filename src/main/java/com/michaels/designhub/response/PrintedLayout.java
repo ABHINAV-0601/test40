@@ -1,5 +1,7 @@
 package com.michaels.designhub.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
@@ -8,8 +10,12 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PrintedLayout {
 
-    private String glass_type;
-    private ResponseInfo response_info;
+    @JsonProperty("glass_type")
+    private String glassType;
+
+    @JsonProperty("response_info")
+    private ResponseInfo responseInfo;
 }
