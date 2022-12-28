@@ -21,10 +21,10 @@ public class Parts {
     private String orderId;
 
     @JsonProperty("aX")
-    private int aX;
+    private BigDecimal aX;
 
     @JsonProperty("aY")
-    private int aY;
+    private BigDecimal aY;
 
     private boolean rotated;
 }
