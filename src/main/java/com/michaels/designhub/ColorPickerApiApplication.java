@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
  * @Date: 9/1/2022 2:55 PM
  */
 @SpringBootApplication
-public class ColorPickerApiApplication {
+public class ColorPickerApiApplication  {
 
     public static void main(String[] args) {
         SpringApplication.run(ColorPickerApiApplication.class, args);
