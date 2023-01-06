@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8080
   platform: dev
   servlet:
     context-path: /api
@@ -12,10 +12,11 @@ spring:
     name: color-picker-api
   cloud:
     vault:
-      host: localhost
+      host: vault.default.svc.cluster.local
       port: 8200
       scheme: http
       token: ***REMOVED***
+      #token: ***REMOVED***
   #i18n
   config:
     import: vault://
