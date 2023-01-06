@@ -16,7 +16,6 @@ spring:
       port: 8200
       scheme: http
       token: ***REMOVED***
-      #token: ***REMOVED***
   #i18n
   config:
     import: vault://
