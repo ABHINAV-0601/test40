@@ -12,8 +12,9 @@ spring:
     name: color-picker-api
   cloud:
     vault:
-      host: vault.default.svc.cluster.local:8200/v1/color-picker-api/data/color-picker-api
-      port: 8200
+      #host: vault.default.svc.cluster.local
+      uri: vault.default.svc.cluster.local:8200/v1/color-picker-api/data/color-picker-api
+      #port: 8200
       scheme: http
       token: ***REMOVED***
   #i18n
