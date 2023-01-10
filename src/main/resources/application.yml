@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
   platform: dev
   servlet:
     context-path: /api
@@ -17,11 +17,12 @@ spring:
       port: 8200
       scheme: http
       authentication: token
-      #token: ***REMOVED***
       token: ***REMOVED***
+      #token: ***REMOVED***
       #token: ***REMOVED***
       kv:
         enabled: true
+        backend: color-picker-api
       generic:
         enabled: true
       #uri: http://vault.default.svc.cluster.local:8200/v1/
