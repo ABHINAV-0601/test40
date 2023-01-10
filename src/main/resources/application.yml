@@ -12,18 +12,19 @@ spring:
     name: color-picker-api
   cloud:
     vault:
-      #host: vault.default.svc.cluster.local
+      host: vault.default.svc.cluster.local
       #host: localhost
       port: 8200
       scheme: http
       authentication: token
+      #token: ***REMOVED***
       token: ***REMOVED***
       #token: ***REMOVED***
       kv:
         enabled: true
       generic:
         enabled: true
-      uri: http://vault.default.svc.cluster.local:8200/v1/
+      #uri: http://vault.default.svc.cluster.local:8200/v1/
   #i18n
   config:
     import: vault://
