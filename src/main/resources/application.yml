@@ -13,7 +13,7 @@ spring:
   cloud:
     vault:
       #host: vault.default.svc.cluster.local
-      host: VAULT_ADDR
+      host: ${VAULT_ADDR}
       #host: localhost
       port: 8200
       scheme: http
