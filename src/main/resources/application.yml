@@ -14,19 +14,16 @@ spring:
     vault:
       #host: vault.default.svc.cluster.local
       host: ${VAULT_ADDR}
-      #host: localhost
       port: 8200
       scheme: http
       authentication: token
-      token: ***REMOVED***
       #token: ***REMOVED***
-      #token: ***REMOVED***
+      token: ${VAULT_TOKEN}
       kv:
         enabled: true
-        backend: color-picker-api
+        backend: ${VAULT_ENGINE}
       generic:
         enabled: true
-      #uri: http://vault.default.svc.cluster.local:8200/v1/
   #i18n
   config:
     import: vault://
