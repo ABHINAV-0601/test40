@@ -30,10 +30,10 @@ spring:
     encoding: UTF-8
   #==== db info ====#
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://ec2-3-217-53-211.compute-1.amazonaws.com:5432/ds2fo83ti1vo2?sslmode=require&sslrootcert=./certs/root.crt&sslcert=./certs/postgresql.crt&sslkey=./certs/postgresql.pk8
-    username: ${dbusername}
-    password: ${dbpassword}
+    #driver-class-name: org.postgresql.Driver
+    #url: jdbc:postgresql://ec2-3-217-53-211.compute-1.amazonaws.com:5432/ds2fo83ti1vo2?sslmode=require&sslrootcert=./certs/root.crt&sslcert=./certs/postgresql.crt&sslkey=./certs/postgresql.pk8
+    #username: ${dbusername}
+    #password: ${dbpassword}
     hikari:
       pool-name: DateHikariCP
       minimum-idle: 10

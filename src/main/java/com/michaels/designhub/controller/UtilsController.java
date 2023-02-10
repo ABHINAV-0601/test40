@@ -6,10 +6,7 @@ import com.michaels.designhub.response.SearchGSOAndLayoutOptimizationResponse;
 import com.michaels.designhub.service.impl.UtilsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -37,4 +34,5 @@ public class UtilsController {
         log.info("In Utils and calling function - {}, with function params - {}", utilsDto.getFunctionName(), utilsDto.getFunctionParams());
         return utilsService.utils(utilsDto);
     }
+
 }
