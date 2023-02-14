@@ -120,7 +120,7 @@ public class UtilsServiceImpl implements UtilsService {
             }
             getGsoNonPrintedLayout.setDetails(list);
             requestJson = JSON.parseObject(JSON.toJSONString(getGsoNonPrintedLayout));
-            log.debug("requestJson = {}",requestJson.toJSONString());
+            log.debug("requestJson = {} ",requestJson.toJSONString());
             JsonNode jsonNode1 = orderRepository.get_gso_non_printed_layout(requestJson.toJSONString());
             JSONObject jsonObject1 = JSON.parseObject(jsonNode1.toString());
             NonPrintedLayoutParent nonPrintedLayoutParent = JSON.toJavaObject(jsonObject1, NonPrintedLayoutParent.class);
