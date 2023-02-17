@@ -169,7 +169,7 @@ public class UtilsServiceImpl implements UtilsService {
             String url = null;
             try {
                 url = "http://"+utilsDto.getServiceHost()+":"+utilsDto.getServicePort()+utilsDto.getServiceUri();
-                log.debug("utils get data url:{}",url);
+                log.debug("utils get data url:{} ",url);
                 HttpHeaders headers = new HttpHeaders();
                 MediaType type = MediaType.parseMediaType(APPLICATION_JSON_CHARSET_UTF_8);
                 headers.setContentType(type);
