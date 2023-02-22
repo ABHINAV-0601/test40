@@ -1,6 +1,7 @@
 package com.michaels.designhub.controller;
 
 import com.michaels.designhub.dto.UtilsDto;
+import com.michaels.designhub.entity.TrainingLog;
 import com.michaels.designhub.request.SearchGSOAndLayoutOptimizationRequest;
 import com.michaels.designhub.response.SearchGSOAndLayoutOptimizationResponse;
 import com.michaels.designhub.service.impl.UtilsServiceImpl;
@@ -33,6 +34,16 @@ public class UtilsController {
     public Map<String,Object> utils(@RequestBody UtilsDto utilsDto) {
         log.info("In Utils and calling function - {}, with function params - {}", utilsDto.getFunctionName(), utilsDto.getFunctionParams());
         return utilsService.utils(utilsDto);
+    }
+
+    @PostMapping("/training")
+    public Integer log_training(@RequestBody TrainingLog tlog) {
+        return utilsService.saveTrainingLog(tlog);
+    }
+
+    @PutMapping("/training")
+    public void leave_training(@RequestBody Map<String, Integer> body) {
+        utilsService.exitTrainingLog(body.get("id"));
     }
 
 }

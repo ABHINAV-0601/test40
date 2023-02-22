@@ -1,6 +1,7 @@
 package com.michaels.designhub.service;
 
 import com.michaels.designhub.dto.UtilsDto;
+import com.michaels.designhub.entity.TrainingLog;
 import com.michaels.designhub.request.SearchGSOAndLayoutOptimizationRequest;
 import com.michaels.designhub.response.SearchGSOAndLayoutOptimizationResponse;
 
@@ -21,4 +22,19 @@ public interface UtilsService {
      * @return
      */
     public Map<String,Object> utils(UtilsDto utilsDto);
+
+    /**
+     * save training details
+     * @param trainingLog
+     * @return
+     */
+    Integer saveTrainingLog(TrainingLog trainingLog);
+
+    /**
+     * update training log exit timestamp
+     * @param id
+     */
+    void exitTrainingLog(Integer id);
+
+
 }

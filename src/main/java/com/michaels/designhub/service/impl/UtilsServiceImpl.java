@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.michaels.designhub.dto.UtilsDto;
+import com.michaels.designhub.entity.TrainingLog;
 import com.michaels.designhub.repository.ICommonDao;
 import com.michaels.designhub.repository.OrderRepository;
+import com.michaels.designhub.repository.UtilRepository;
 import com.michaels.designhub.request.*;
 import com.michaels.designhub.response.*;
 import com.michaels.designhub.service.UtilsService;
@@ -21,6 +23,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -47,6 +50,9 @@ public class UtilsServiceImpl implements UtilsService {
     private ICommonDao commonDao;
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private UtilRepository utilRepository;
 
     public SearchGSOAndLayoutOptimizationResponse utilsGso(SearchGSOAndLayoutOptimizationRequest searchGSOAndLayoutOptimizationRequest) throws Exception {
         log.info("SearchGSOAndLayoutOptimizationResponse - utils Gso params : {},",searchGSOAndLayoutOptimizationRequest);
@@ -201,5 +207,28 @@ public class UtilsServiceImpl implements UtilsService {
             }
         }
         return result;
+    }
+
+    /**
+     * @param trainingLog
+     * @return
+     */
+    @Override
+    public Integer saveTrainingLog(TrainingLog trainingLog) {
+        if (trainingLog.getCreated_at() == null) {
+            trainingLog.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        }
+        return utilRepository.save(trainingLog).getId();
+    }
+
+    /**
+     * @param id
+     */
+    @Override
+    public void exitTrainingLog(Integer id) {
+
+        TrainingLog entry = utilRepository.getOne(id);
+        entry.setExited_at(new Timestamp(System.currentTimeMillis()));
+        utilRepository.save(entry);
     }
 }
