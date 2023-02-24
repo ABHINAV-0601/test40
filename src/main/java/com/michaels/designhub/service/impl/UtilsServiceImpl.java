@@ -7,7 +7,7 @@ import com.michaels.designhub.dto.UtilsDto;
 import com.michaels.designhub.entity.TrainingLog;
 import com.michaels.designhub.repository.ICommonDao;
 import com.michaels.designhub.repository.OrderRepository;
-import com.michaels.designhub.repository.UtilRepository;
+import com.michaels.designhub.repository.TrainingLogRepository;
 import com.michaels.designhub.request.*;
 import com.michaels.designhub.response.*;
 import com.michaels.designhub.service.UtilsService;
@@ -52,7 +52,7 @@ public class UtilsServiceImpl implements UtilsService {
     private RestTemplate restTemplate;
 
     @Autowired
-    private UtilRepository utilRepository;
+    private TrainingLogRepository trainingLogRepository;
 
     public SearchGSOAndLayoutOptimizationResponse utilsGso(SearchGSOAndLayoutOptimizationRequest searchGSOAndLayoutOptimizationRequest) throws Exception {
         log.info("SearchGSOAndLayoutOptimizationResponse - utils Gso params : {},",searchGSOAndLayoutOptimizationRequest);
@@ -218,7 +218,7 @@ public class UtilsServiceImpl implements UtilsService {
         if (trainingLog.getCreated_at() == null) {
             trainingLog.setCreated_at(new Timestamp(System.currentTimeMillis()));
         }
-        return utilRepository.save(trainingLog).getId();
+        return trainingLogRepository.save(trainingLog).getId();
     }
 
     /**
@@ -226,9 +226,8 @@ public class UtilsServiceImpl implements UtilsService {
      */
     @Override
     public void exitTrainingLog(Integer id) {
-
-        TrainingLog entry = utilRepository.getOne(id);
+        TrainingLog entry = trainingLogRepository.getOne(id);
         entry.setExited_at(new Timestamp(System.currentTimeMillis()));
-        utilRepository.save(entry);
+        trainingLogRepository.save(entry);
     }
 }
