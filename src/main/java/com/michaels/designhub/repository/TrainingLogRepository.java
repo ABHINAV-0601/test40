@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UtilRepository extends JpaRepository<TrainingLog, Integer> {
+public interface TrainingLogRepository extends JpaRepository<TrainingLog, Integer> {
 
 }
