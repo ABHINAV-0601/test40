@@ -20,7 +20,7 @@ public class CatalogController {
     @Autowired
     CatalogService catalogService;
 
-    @GetMapping("catalog/catalogs")
+    @GetMapping("/catalog/catalogs")
     public String getCatalog() {
         return catalogService.getCatalog();
     }

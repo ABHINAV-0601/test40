@@ -36,12 +36,12 @@ public class UtilsController {
         return utilsService.utils(utilsDto);
     }
 
-    @PostMapping("/training")
+    @PostMapping("/utils/training")
     public Integer logTraining(@RequestBody TrainingLog tlog) {
         return utilsService.saveTrainingLog(tlog);
     }
 
-    @PutMapping("/training")
+    @PutMapping("/utils/training")
     public void leaveTraining(@RequestBody Map<String, Integer> body) {
         utilsService.exitTrainingLog(body.get("id"));
     }
