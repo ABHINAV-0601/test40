@@ -5,11 +5,13 @@ import com.michaels.designhub.dto.UpdateOfflinePINResponse;
 import com.michaels.designhub.entity.OfflinePIN;
 import com.michaels.designhub.response.OfflinePINResponse;
 import com.michaels.designhub.service.OfflinePINService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * @Author Baojian Hong
@@ -18,15 +20,14 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/v1")
+@Validated
+@Slf4j
 public class OfflinePINController {
-
-    Logger logger = LoggerFactory.getLogger(OfflinePINController.class);
-
     @Autowired
     private OfflinePINService offlinePINService;
 
     @GetMapping("/offline-pin")
-    public OfflinePINResponse getPin(@RequestParam(name = "store_id") String storeId){
+    public OfflinePINResponse getPin(@RequestParam(name = "store_id") @NotBlank(message = "store_id should not be null or blank") String storeId){
         OfflinePIN pin = offlinePINService.getPin(storeId);
         OfflinePINResponse offlinePINResponse = new OfflinePINResponse();
         BeanUtils.copyProperties(pin,offlinePINResponse);
