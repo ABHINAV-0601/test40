@@ -9,7 +9,7 @@ management:
       base-path: /promotions
 spring:
   profiles:
-    active: dh
+    active: qa
   application:
     name: color-picker-api
   #===== Authorization check ====== #
