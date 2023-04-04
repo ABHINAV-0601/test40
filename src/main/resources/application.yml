@@ -9,10 +9,10 @@ management:
       base-path: /promotions
 spring:
   profiles:
-    active: dh
+    active: qa
   application:
     name: color-picker-api
-  #===== Authorization check ===== #
+  #===== Authorization check ====== #
 design:
   hub:
     token:
@@ -28,7 +28,7 @@ dotNet:
   host: "https://dh-gso-dotnet-svc-stg.herokuapp.com"
   uri: "/api/v1/gso"
 
-# ===== log===== # 
+# ===== log=====#
 logging:
   level:
     root: ${LOG_LEVEL:INFO}
