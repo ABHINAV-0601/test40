@@ -25,14 +25,14 @@ public class UtilsController {
 
     @PostMapping("/utils/gso")
     public SearchGSOAndLayoutOptimizationResponse utilsGso(@RequestBody SearchGSOAndLayoutOptimizationRequest searchGSOAndLayoutOptimizationRequest) throws Exception {
-        log.info("In Search GSO and Optimization flow");
-        log.info(searchGSOAndLayoutOptimizationRequest.toString());
+        log.debug("In Search GSO and Optimization flow");
+        log.debug(searchGSOAndLayoutOptimizationRequest.toString());
         return utilsService.utilsGso(searchGSOAndLayoutOptimizationRequest);
     }
 
     @PostMapping("/utils")
     public Map<String,Object> utils(@RequestBody UtilsDto utilsDto) {
-        log.info("In Utils and calling function - {}, with function params - {}", utilsDto.getFunctionName(), utilsDto.getFunctionParams());
+        log.debug("In Utils and calling function - {}, with function params - {}", utilsDto.getFunctionName(), utilsDto.getFunctionParams());
         return utilsService.utils(utilsDto);
     }
 
