@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration debug="true">
+<configuration debug="false">
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
     <springProperty scope="context" name="logPath" source="logging.config.path" defaultValue="logdir"/>
 
     <property name="LOG_HOME" value="${logPath}" />
