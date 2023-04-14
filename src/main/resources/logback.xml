@@ -87,6 +87,18 @@
             <MaxFileSize>10MB</MaxFileSize>
         </rollingPolicy>
     </appender>
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.springframework.web" level="WARN"/>
+    <logger name="org.hibernate" level="INFO"/>
+    <logger name="io" level="ERROR"/>
+    <logger name="springfox" level="WARN"/>
+    <logger name="com.zaxxer" level="WARN"/>
+    <logger name="org.postgresql" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+    <logger name="javax" level="WARN"/>
+    <logger name="unknown.jul.logger" level="WARN"/>
+    <logger name="Validator" level="WARN"/>
+    <logger name="org.jboss.logging" level="WARN"/>
     <root name="com.michaels.designhub" level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="DEBUG"/>
