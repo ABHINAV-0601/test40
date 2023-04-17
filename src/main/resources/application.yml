@@ -1,6 +1,5 @@
 server:
   port: 8080
-  platform: dev
   servlet:
     context-path: /api
 management:
@@ -15,17 +14,11 @@ spring:
   #===== Authorization check ====== #
 design:
   hub:
-    token:
-      excludePathPatterns:
-    auth:
-      client_id: ***REMOVED***
-      client_secret: ***REMOVED***
-      url: https://signon.michaels.com/mga/sps/oauth/oauth20/introspect
     promotions:
-      url: https://tibcoapiintegrationpre.michaels.com:443/promorequest
+      url: https://${TIBCO_HOST}:${TIBCO_PORT}/promorequest
 #===== stag ===== #
 dotNet:
-  host: "https://dh-gso-dotnet-svc-stg.herokuapp.com"
+  host: ${GSO_HOST}
   uri: "/api/v1/gso"
 
 # ===== log===== #
