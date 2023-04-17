@@ -11,16 +11,10 @@ spring:
     active: ${PROFILE:dh,dev}
   application:
     name: color-picker-api
-  #===== Authorization check ====== #
-design:
-  hub:
-    promotions:
-      url: https://${TIBCO_HOST}:${TIBCO_PORT}/promorequest
 #===== stag ===== #
 dotNet:
   host: ${GSO_HOST}
   uri: "/api/v1/gso"
-
 # ===== log===== #
 logging:
   level:
