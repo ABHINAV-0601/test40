@@ -4,6 +4,7 @@
     <springProperty scope="context" name="logPath" source="logging.config.path" defaultValue="logdir"/>
 
     <property name="LOG_HOME" value="${logPath}" />
+    <property name="projectId" value="color-picker-api"/>
 
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
     <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
@@ -16,6 +17,25 @@
         <encoder>
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>
             <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="GCP_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.springframework.cloud.gcp.logging.StackdriverJsonLayout">
+                <projectId>${projectId}</projectId>
+                <includeTraceId>true</includeTraceId>
+                <includeSpanId>true</includeSpanId>
+                <includeLevel>true</includeLevel>
+                <includeThreadName>true</includeThreadName>
+                <includeMDC>true</includeMDC>
+                <includeLoggerName>true</includeLoggerName>
+                <includeFormattedMessage>true</includeFormattedMessage>
+                <includeExceptionInMessage>true</includeExceptionInMessage>
+                <includeContextName>true</includeContextName>
+                <includeMessage>false</includeMessage>
+                <includeException>false</includeException>
+            </layout>
         </encoder>
     </appender>
 
@@ -100,7 +120,7 @@
     <logger name="Validator" level="WARN"/>
     <logger name="org.jboss.logging" level="WARN"/>
     <root name="com.michaels.designhub" level="INFO">
-        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="GCP_CONSOLE"/>
         <appender-ref ref="DEBUG"/>
         <appender-ref ref="INFO"/>
         <appender-ref ref="WARN"/>
