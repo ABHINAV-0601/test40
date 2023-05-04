@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration debug="true">
+<configuration debug="false">
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
     <springProperty scope="context" name="logPath" source="logging.config.path" defaultValue="logdir"/>
 
     <property name="LOG_HOME" value="${logPath}" />
+    <property name="projectId" value="color-picker-api"/>
 
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
     <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
@@ -15,6 +17,25 @@
         <encoder>
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>
             <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="GCP_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.springframework.cloud.gcp.logging.StackdriverJsonLayout">
+                <projectId>${projectId}</projectId>
+                <includeTraceId>true</includeTraceId>
+                <includeSpanId>true</includeSpanId>
+                <includeLevel>true</includeLevel>
+                <includeThreadName>true</includeThreadName>
+                <includeMDC>true</includeMDC>
+                <includeLoggerName>true</includeLoggerName>
+                <includeFormattedMessage>true</includeFormattedMessage>
+                <includeExceptionInMessage>true</includeExceptionInMessage>
+                <includeContextName>true</includeContextName>
+                <includeMessage>false</includeMessage>
+                <includeException>false</includeException>
+            </layout>
         </encoder>
     </appender>
 
@@ -86,8 +107,20 @@
             <MaxFileSize>10MB</MaxFileSize>
         </rollingPolicy>
     </appender>
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.springframework.web" level="WARN"/>
+    <logger name="org.hibernate" level="INFO"/>
+    <logger name="io" level="ERROR"/>
+    <logger name="springfox" level="WARN"/>
+    <logger name="com.zaxxer" level="WARN"/>
+    <logger name="org.postgresql" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+    <logger name="javax" level="WARN"/>
+    <logger name="unknown.jul.logger" level="WARN"/>
+    <logger name="Validator" level="WARN"/>
+    <logger name="org.jboss.logging" level="WARN"/>
     <root name="com.michaels.designhub" level="INFO">
-        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="GCP_CONSOLE"/>
         <appender-ref ref="DEBUG"/>
         <appender-ref ref="INFO"/>
         <appender-ref ref="WARN"/>
