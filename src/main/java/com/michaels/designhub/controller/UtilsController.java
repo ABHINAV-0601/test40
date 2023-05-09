@@ -32,7 +32,7 @@ public class UtilsController {
 
     @PostMapping("/utils")
     public Map<String,Object> utils(@RequestBody UtilsDto utilsDto) {
-        log.debug("In Utils and calling function - {}, with function params - {}", utilsDto.getFunctionName(), utilsDto.getFunctionParams());
+        log.info("In Utils and calling function - {}, with function params - {}", utilsDto.getFunctionName(), utilsDto.getFunctionParams());
         return utilsService.utils(utilsDto);
     }
 
