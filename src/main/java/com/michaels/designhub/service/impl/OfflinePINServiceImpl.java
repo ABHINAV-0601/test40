@@ -26,14 +26,14 @@ public class OfflinePINServiceImpl implements OfflinePINService {
 
     @Override
     public OfflinePIN getPin(String storeId) {
-        log.info("getPin - getPin params:{}.",storeId);
+        log.debug("getPin - getPin params:{}.",storeId);
         List<OfflinePIN> list = offlinePINRepository.selectByStoreId(storeId);
         return list.get(0);
     }
 
     @Override
     public UpdateOfflinePINResponse UpdatePin(UpdateOfflinePINRequest updateOfflinePINRequest) {
-        log.info("UpdatePin - Update Pin params:{}.",updateOfflinePINRequest);
+        log.debug("UpdatePin - Update Pin params:{}.",updateOfflinePINRequest);
         UpdateOfflinePINResponse pinResponse = new UpdateOfflinePINResponse();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 

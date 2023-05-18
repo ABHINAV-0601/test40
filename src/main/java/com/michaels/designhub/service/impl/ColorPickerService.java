@@ -23,7 +23,7 @@ public class ColorPickerService implements IColorPickerService {
 
     @Override
     public List<ColorPicker> findColorPickerByLocale() {
-        log.info("ColorPicker findColorPickerByLocale.");
+        log.debug("ColorPicker findColorPickerByLocale.");
         return colorPickerRepository.findColorPickerByLocale();
     }
 }
