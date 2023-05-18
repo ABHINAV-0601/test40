@@ -27,7 +27,7 @@ public class FramersServiceImpl implements FramersService {
     @Override
     public Object getFramersByUsername(String username) {
         //"Fetch Framer details for username -" ++ vars.username
-        log.info("getFramersByUsername - Fetch  Framer details for username - {}. " , username);
+        log.debug("getFramersByUsername - Fetch  Framer details for username - {}. " , username);
         Framer framer = framersRepository.getFramersByUsername(username);
         if (framer == null) {
             log.warn("postFramers - No Framer Data Found.");
@@ -42,7 +42,7 @@ public class FramersServiceImpl implements FramersService {
 
     @Override
     public Object postFramers(FramersRequest framersRequest) {
-        log.info("postFramers - Fetch post Framers params - {}." , framersRequest);
+        log.debug("postFramers - Fetch post Framers params - {}." , framersRequest);
         int i = framersRepository.updateFramers(framersRequest.getUpdated_at(), framersRequest.getUsername());
         if (i == 0) {
             // add
