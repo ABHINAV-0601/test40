@@ -55,7 +55,7 @@ public class UtilsServiceImpl implements UtilsService {
     private TrainingLogRepository trainingLogRepository;
 
     public SearchGSOAndLayoutOptimizationResponse utilsGso(SearchGSOAndLayoutOptimizationRequest searchGSOAndLayoutOptimizationRequest) throws Exception {
-        log.info("SearchGSOAndLayoutOptimizationResponse - utils Gso params : {},",searchGSOAndLayoutOptimizationRequest);
+        log.debug("SearchGSOAndLayoutOptimizationResponse - utils Gso params : {},",searchGSOAndLayoutOptimizationRequest);
         JSONObject requestJson = JSON.parseObject(JSON.toJSONString(searchGSOAndLayoutOptimizationRequest));
         JsonNode jsonNode = orderRepository.get_gso_glasstype_req(requestJson.toJSONString());
 
@@ -85,7 +85,7 @@ public class UtilsServiceImpl implements UtilsService {
                     log.error("SearchGSOAndLayoutOptimizationResponse - Exception:{}",e.getMessage());
                     throw new Exception(e.getMessage());
                 }
-                log.info("SearchGSOAndLayoutOptimizationResponse - MP = {}", MPDotNetResponse.toString());
+                log.debug("SearchGSOAndLayoutOptimizationResponse - MP = {}", MPDotNetResponse.toString());
             } else if ("CP".equals(details.getGlass_type())) {
                 String req_info = JSON.toJSONString(details.getReq_info());
                 HttpHeaders headers = new HttpHeaders();
@@ -100,7 +100,7 @@ public class UtilsServiceImpl implements UtilsService {
                 } catch (Exception e){
                     log.error("SearchGSOAndLayoutOptimizationResponse - Request herokuApp fail, Status is CP");
                 }
-                log.info("SearchGSOAndLayoutOptimizationResponse - CP = " + CPDotNetResponse.toString());
+                log.debug("SearchGSOAndLayoutOptimizationResponse - CP = " + CPDotNetResponse.toString());
             }
         }
         GetGsoNonPrintedLayout getGsoNonPrintedLayout = new GetGsoNonPrintedLayout();

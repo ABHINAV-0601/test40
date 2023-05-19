@@ -29,7 +29,7 @@ public class GlassInventoryServiceImpl implements GlassInventoryService {
 
     @Override
     public Object get(String storeId) {
-        log.info("get - get GlassInventory by {}.",storeId);
+        log.debug("get - get GlassInventory by {}.",storeId);
         List<Map<String, Object>> list = framersRepository.getGlassInventory(storeId);
         if (!list.isEmpty()) {
             FetchGlassInventoryResponse fetchGlassInventoryResponse = new FetchGlassInventoryResponse();
@@ -46,7 +46,7 @@ public class GlassInventoryServiceImpl implements GlassInventoryService {
 
     @Override
     public Object update(UpdateGlassInventoryRequest updateGlassInventoryRequest) {
-        log.info("update - update GlassInventory params {}.",updateGlassInventoryRequest);
+        log.debug("update - update GlassInventory params {}.",updateGlassInventoryRequest);
         Map<String, Object> map = new HashMap<>();
         map.put(STATUS_CODE, 1);
         if (null == updateGlassInventoryRequest || null == updateGlassInventoryRequest.getStore_glass_inventory() || updateGlassInventoryRequest.getStore_glass_inventory().isEmpty()) {
