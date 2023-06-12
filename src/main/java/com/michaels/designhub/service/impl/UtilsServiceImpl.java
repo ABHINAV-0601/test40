@@ -60,8 +60,6 @@ public class UtilsServiceImpl implements UtilsService {
     @Autowired
     private TrainingLogRepository trainingLogRepository;
 
-    @Autowired
-    private HttpServletRequest request;
 
     public SearchGSOAndLayoutOptimizationResponse utilsGso(SearchGSOAndLayoutOptimizationRequest searchGSOAndLayoutOptimizationRequest) throws Exception {
         log.debug("SearchGSOAndLayoutOptimizationResponse - utils Gso params : {},",searchGSOAndLayoutOptimizationRequest);
@@ -176,13 +174,13 @@ public class UtilsServiceImpl implements UtilsService {
     }
 
     @Override
-    public Map<String, Object> utils(UtilsDto utilsDto) {
+    public Map<String, Object> utils(UtilsDto utilsDto, HttpServletRequest httpServletRequest) {
         log.debug("utils - utils get data params :{}",utilsDto);
         Map<String, Object> result = new HashMap<>();
         result.put("module_name",utilsDto.getFunctionName());
 
         if(!utilsDto.getIsFunction().booleanValue()){
-            String accessToken = (String) request.getAttribute(ACCESS_TOKEN);
+            String accessToken = (String) httpServletRequest.getAttribute(ACCESS_TOKEN);
             String url = null;
             try {
                 String port = "";

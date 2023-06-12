@@ -14,7 +14,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,9 @@ class UtilsControllerTest {
     @Mock
     private List<Integer> mockList;
 
+    @Mock
+    private HttpServletRequest request;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -57,8 +62,8 @@ class UtilsControllerTest {
         utilsDto.setIsFunction(true);
         utilsDto.setFunctionName("get_rep_workload_planner");
         utilsDto.setFunctionParams("'1010','2022-12-25','2022-12-31'");
-        when(utilsService.utils(any())).thenReturn(map);
-        Map<String,Object> result = utilsController.utils(utilsDto);
+        when(utilsService.utils(any(),any(HttpServletRequest.class))).thenReturn(map);
+        Map<String,Object> result = utilsController.utils(utilsDto,request);
         Assertions.assertNotNull(result);
     }
 

@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -31,9 +32,9 @@ public class UtilsController {
     }
 
     @PostMapping("/utils")
-    public Map<String,Object> utils(@RequestBody UtilsDto utilsDto) {
+    public Map<String,Object> utils(@RequestBody UtilsDto utilsDto, HttpServletRequest httpServletRequest) {
         log.debug("In Utils and calling function - {}, with function params - {}", utilsDto.getFunctionName(), utilsDto.getFunctionParams());
-        return utilsService.utils(utilsDto);
+        return utilsService.utils(utilsDto,httpServletRequest);
     }
 
     @PostMapping("/utils/training")

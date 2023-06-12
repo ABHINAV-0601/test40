@@ -5,6 +5,7 @@ import com.michaels.designhub.entity.TrainingLog;
 import com.michaels.designhub.request.SearchGSOAndLayoutOptimizationRequest;
 import com.michaels.designhub.response.SearchGSOAndLayoutOptimizationResponse;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -21,7 +22,7 @@ public interface UtilsService {
      * @param utilsDto
      * @return
      */
-    public Map<String,Object> utils(UtilsDto utilsDto);
+    public Map<String,Object> utils(UtilsDto utilsDto, HttpServletRequest httpServletRequest);
 
     /**
      * save training details
