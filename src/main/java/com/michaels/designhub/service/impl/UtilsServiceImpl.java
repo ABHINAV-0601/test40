@@ -12,6 +12,7 @@ import com.michaels.designhub.request.*;
 import com.michaels.designhub.response.*;
 import com.michaels.designhub.service.UtilsService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -38,6 +40,10 @@ public class UtilsServiceImpl implements UtilsService {
 
     public static final String APPLICATION_JSON_CHARSET_UTF_8 = "application/json; charset=UTF-8";
     public static final String ACCEPT = "Accept";
+
+    public static final String HEADER_TOKEN = "token";
+
+    public static final String ACCESS_TOKEN ="access-token";
     public static final String MODULE_PARAMS = "module_params";
     @Autowired
     private OrderRepository orderRepository;
@@ -53,6 +59,9 @@ public class UtilsServiceImpl implements UtilsService {
 
     @Autowired
     private TrainingLogRepository trainingLogRepository;
+
+    @Autowired
+    private HttpServletRequest request;
 
     public SearchGSOAndLayoutOptimizationResponse utilsGso(SearchGSOAndLayoutOptimizationRequest searchGSOAndLayoutOptimizationRequest) throws Exception {
         log.debug("SearchGSOAndLayoutOptimizationResponse - utils Gso params : {},",searchGSOAndLayoutOptimizationRequest);
@@ -171,15 +180,23 @@ public class UtilsServiceImpl implements UtilsService {
         log.debug("utils - utils get data params :{}",utilsDto);
         Map<String, Object> result = new HashMap<>();
         result.put("module_name",utilsDto.getFunctionName());
+
         if(!utilsDto.getIsFunction().booleanValue()){
+            String accessToken = (String) request.getAttribute(ACCESS_TOKEN);
             String url = null;
             try {
-                url = "http://"+utilsDto.getServiceHost()+":"+utilsDto.getServicePort()+utilsDto.getServiceUri();
+                String port = "";
+                if (StringUtils.isNotBlank(utilsDto.getServicePort()))
+                    port = ":"+utilsDto.getServicePort();
+
+                url = utilsDto.getServiceHost()+port+utilsDto.getServiceUri();
+
                 log.debug("utils get data url:{} ",url);
                 HttpHeaders headers = new HttpHeaders();
                 MediaType type = MediaType.parseMediaType(APPLICATION_JSON_CHARSET_UTF_8);
                 headers.setContentType(type);
                 headers.add(ACCEPT, MediaType.APPLICATION_JSON.toString());
+                headers.add(HEADER_TOKEN, accessToken);
                 // HttpEntity
                 HttpEntity<?> formEntity = new HttpEntity<>(JSON.toJSONString(utilsDto.getServiceParams()), headers);
                 String obj = restTemplate.postForObject(url, formEntity, String.class);
