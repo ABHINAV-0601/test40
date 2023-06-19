@@ -38,7 +38,7 @@ public class CommonDao implements ICommonDao {
             return query.getSingleResult();
 
         }catch (Exception e){
-            throw new RuntimeException("Error occurred while calling function - "+utilsDto.getFunctionName(),e);
+            throw new RuntimeException("Exception occurred while calling Utils API with is_a_function="+utilsDto.getIsFunction()+", function_name="+utilsDto.getFunctionName()+" ,function_params="+utilsDto.getFunctionParams(),e);
         }
     }
 }

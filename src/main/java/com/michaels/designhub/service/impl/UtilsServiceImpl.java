@@ -204,7 +204,7 @@ public class UtilsServiceImpl implements UtilsService {
                     result.put(MODULE_PARAMS,"No Data Found");
                 }
             } catch (Exception e) {
-                log.error("utils - url {} get data fail：{}",url,e.getMessage());
+                log.error("Exception occurred while calling Utils API with is_a_function={}, function_name={} ,function_params={}",utilsDto.getIsFunction(),utilsDto.getFunctionName(),utilsDto.getFunctionParams(),e);
                 result.put(MODULE_PARAMS,e.getMessage());
             }
         }else{
