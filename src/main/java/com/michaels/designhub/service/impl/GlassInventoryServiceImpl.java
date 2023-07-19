@@ -37,7 +37,7 @@ public class GlassInventoryServiceImpl implements GlassInventoryService {
             fetchGlassInventoryResponse.setStore_glass_inventory(list);
             return fetchGlassInventoryResponse;
         } else {
-            log.warn("get - No Inventory data found.");
+            log.debug("get - No Inventory data found.");
             Map<String, Object> map = new HashMap<>();
             map.put("Message", "No Inventory data found");
             return map;
@@ -50,7 +50,7 @@ public class GlassInventoryServiceImpl implements GlassInventoryService {
         Map<String, Object> map = new HashMap<>();
         map.put(STATUS_CODE, 1);
         if (null == updateGlassInventoryRequest || null == updateGlassInventoryRequest.getStore_glass_inventory() || updateGlassInventoryRequest.getStore_glass_inventory().isEmpty()) {
-            log.warn("update GlassInventory params check Failed.");
+            log.debug("update GlassInventory params check Failed.");
             map.put(STATUS_CODE, 0);
             map.put(STATUS_MESSAGE, "Failed");
             return map;
@@ -59,7 +59,7 @@ public class GlassInventoryServiceImpl implements GlassInventoryService {
         for (StoreGlassInventoryRequest storeGlassInventory : store_glass_inventory) {
             int i = framersRepository.update(storeGlassInventory.getStore_glass_inventory_id(),storeGlassInventory.getInventory_count());
             if (i == 0 && Integer.parseInt(map.get(STATUS_CODE).toString()) != 0){
-                log.warn("update - update GlassInventory Failed.");
+                log.debug("update - update GlassInventory Failed.");
                 map.put(STATUS_CODE, 0);
                 map.put(STATUS_MESSAGE, "Failed");
             }else{
