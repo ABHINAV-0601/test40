@@ -169,7 +169,7 @@ public class UtilsServiceImpl implements UtilsService {
             }
             return searchGSOAndLayoutOptimizationResponse;
         }
-        log.debug("SearchGSOAndLayoutOptimizationResponse - result is null");
+        log.warn("SearchGSOAndLayoutOptimizationResponse - result is null");
         return null;
     }
 
@@ -217,7 +217,7 @@ public class UtilsServiceImpl implements UtilsService {
                     result.put(MODULE_PARAMS,JSON.parseObject(response));
                 }
             }else{
-                log.debug("utils - No Data Found.");
+                log.warn("utils - No Data Found.");
                 result.put(MODULE_PARAMS,"No Data Found");
             }
         }

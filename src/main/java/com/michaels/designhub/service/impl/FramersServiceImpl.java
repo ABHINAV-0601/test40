@@ -30,7 +30,7 @@ public class FramersServiceImpl implements FramersService {
         log.debug("getFramersByUsername - Fetch  Framer details for username - {}. " , username);
         Framer framer = framersRepository.getFramersByUsername(username);
         if (framer == null) {
-            log.debug("postFramers - No Framer Data Found.");
+            log.warn("postFramers - No Framer Data Found.");
             Map<String, String> map = new HashMap<>();
             map.put("Message", "No Framer Data Found");
             return map;
@@ -51,7 +51,7 @@ public class FramersServiceImpl implements FramersService {
         Map<String, Object> map = new HashMap<>();
         map.put("status_code", i);
         if (i == 0) {
-            log.debug("postFramers - post Framers Failure.");
+            log.warn("postFramers - post Framers Failure.");
             map.put("status_message", "Failure");
         }else{
             map.put("status_message", "Success");
