@@ -42,7 +42,7 @@ public class OfflinePINServiceImpl implements OfflinePINService {
             pinResponse.setStatus_code(1);
             pinResponse.setStatus_message("Success");
         }else{
-            log.debug("UpdatePin - Update Pin Failure.");
+            log.warn("UpdatePin - Update Pin Failure.");
             pinResponse.setStatus_code(0);
             pinResponse.setStatus_message("Failure");
         }
