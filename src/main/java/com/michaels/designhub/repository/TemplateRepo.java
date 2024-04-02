@@ -21,8 +21,8 @@ public interface TemplateRepo extends JpaRepository<Template, Integer> {
 
 
     @Modifying
-    @Query(nativeQuery = true, value = "UPDATE design_template SET is_active=false, update_at = :updateAt WHERE type = 'default' and is_active=true")
-    int updateTemplateByTypeAndIsActive(Date updateAt);
+    @Query(nativeQuery = true, value = "UPDATE design_template SET is_active=false, update_at = :updateAt WHERE type = 'default' and is_active=true and store_id = :storeId ")
+    int updateTemplateByTypeAndIsActive(Date updateAt,@Param("storeId") String storeId);
 
 
     @Query(nativeQuery = true, value = "select count(*) from design_template where type = :type and is_active = true")
