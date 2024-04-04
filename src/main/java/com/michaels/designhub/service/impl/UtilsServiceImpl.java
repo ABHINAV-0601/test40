@@ -1,6 +1,7 @@
 package com.michaels.designhub.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.michaels.designhub.dto.TrackingNumberDto;
@@ -11,6 +12,7 @@ import com.michaels.designhub.repository.OrderRepository;
 import com.michaels.designhub.repository.TrainingLogRepository;
 import com.michaels.designhub.request.*;
 import com.michaels.designhub.response.*;
+import com.michaels.designhub.service.ItrackingUpdates;
 import com.michaels.designhub.service.UtilsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +28,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author Baojian Hong
@@ -54,6 +57,9 @@ public class UtilsServiceImpl implements UtilsService {
     private ICommonDao commonDao;
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private ItrackingUpdates trackingUpdate;
 
     @Autowired
     private TrainingLogRepository trainingLogRepository;
@@ -246,30 +252,30 @@ public class UtilsServiceImpl implements UtilsService {
 
     @Override
     public TrackingNumberResponse updateTrackingNumbers(TrackingNumberDto trackingNumberDto) {
-        log.debug("Update tracking numbers as received, request {}", trackingNumberDto);
-        Random random = new Random();
-        List<String> failedTrackingList = new ArrayList<>();
-        if(trackingNumberDto!=null && !trackingNumberDto.getTrackingNumbers().isEmpty()){
-            failedTrackingList.add(trackingNumberDto.getTrackingNumbers().get(0));
-        }
+        log.debug("Starting update of tracking numbers as received: {}", trackingNumberDto);
 
-        int result = random.nextInt(2) + 1;
+        Object rawResult = trackingUpdate.getOrderTrackingMapping(trackingNumberDto);
+        List<String> unsuccessfulUpdates = new ArrayList<>();
 
-        return getTrackingNumberResponse(result, failedTrackingList);
+        log.debug("Raw result from get_orders_by_tracking_numbers: {}", rawResult);
+
+        trackingUpdate.processTrackingNumbersUpdate(rawResult, trackingNumberDto, unsuccessfulUpdates);
+
+        return buildTrackingNumberResponse(unsuccessfulUpdates);
     }
 
-    private static TrackingNumberResponse getTrackingNumberResponse(int result, List<String> failedTrackingList) {
-        TrackingNumberResponse trackingNumberResponse = new TrackingNumberResponse();
-        if(result ==1){
-            trackingNumberResponse.setStatus_code(200);
-            trackingNumberResponse.setStatus_message("Success");
-            trackingNumberResponse.setStatus_description("All orders are updated");
+    private static TrackingNumberResponse buildTrackingNumberResponse(List<String> failedTrackingList) {
+        TrackingNumberResponse response = new TrackingNumberResponse();
+        if (!failedTrackingList.isEmpty()) {
+            response.setStatus_code(500);
+            response.setStatus_message("Failed");
+            response.setStatus_description("Failed to update one or more tracking numbers.");
+            response.setFailed_tracking_numbers(failedTrackingList);
         } else {
-            trackingNumberResponse.setStatus_code(500);
-            trackingNumberResponse.setStatus_message("Failed");
-            trackingNumberResponse.setStatus_description("Updating one or more of the tracking numbers failed.");
-            trackingNumberResponse.setFailed_tracking_numbers(failedTrackingList);
+            response.setStatus_code(200);
+            response.setStatus_message("Success");
+            response.setStatus_description("All tracking numbers updated successfully.");
         }
-        return trackingNumberResponse;
+        return response;
     }
 }
