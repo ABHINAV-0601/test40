@@ -3,6 +3,7 @@ package com.michaels.designhub.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.michaels.designhub.dto.TrackingNumberDto;
 import com.michaels.designhub.dto.UtilsDto;
 import com.michaels.designhub.entity.TrainingLog;
 import com.michaels.designhub.repository.ICommonDao;
@@ -15,10 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
@@ -244,5 +242,34 @@ public class UtilsServiceImpl implements UtilsService {
         TrainingLog entry = trainingLogRepository.getOne(id);
         entry.setExited_at(new Timestamp(System.currentTimeMillis()));
         trainingLogRepository.save(entry);
+    }
+
+    @Override
+    public TrackingNumberResponse updateTrackingNumbers(TrackingNumberDto trackingNumberDto) {
+        log.debug("Update tracking numbers as received, request {}", trackingNumberDto);
+        Random random = new Random();
+        List<String> failedTrackingList = new ArrayList<>();
+        if(trackingNumberDto!=null && !trackingNumberDto.getTrackingNumbers().isEmpty()){
+            failedTrackingList.add(trackingNumberDto.getTrackingNumbers().get(0));
+        }
+
+        int result = random.nextInt(2) + 1;
+
+        return getTrackingNumberResponse(result, failedTrackingList);
+    }
+
+    private static TrackingNumberResponse getTrackingNumberResponse(int result, List<String> failedTrackingList) {
+        TrackingNumberResponse trackingNumberResponse = new TrackingNumberResponse();
+        if(result ==1){
+            trackingNumberResponse.setStatus_code(200);
+            trackingNumberResponse.setStatus_message("Success");
+            trackingNumberResponse.setStatus_description("All orders are updated");
+        } else {
+            trackingNumberResponse.setStatus_code(500);
+            trackingNumberResponse.setStatus_message("Failed");
+            trackingNumberResponse.setStatus_description("Updating one or more of the tracking numbers failed.");
+            trackingNumberResponse.setFailed_tracking_numbers(failedTrackingList);
+        }
+        return trackingNumberResponse;
     }
 }
