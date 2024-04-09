@@ -42,7 +42,7 @@ public class TemplateService {
         UpdateTemplateResponse response = new UpdateTemplateResponse();
         Date date = new Date();
         if ("default".equals(template.getType())){
-            templateRepo.updateTemplateByTypeAndIsActive(date);
+            templateRepo.updateTemplateByTypeAndIsActive(date,template.getStoreId());
             template.setCreatedAt(date);
             template.setUpdateAc(date);
             template.setIsActive(true);
