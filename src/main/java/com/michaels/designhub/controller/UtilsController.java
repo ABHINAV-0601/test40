@@ -1,15 +1,18 @@
 package com.michaels.designhub.controller;
 
+import com.michaels.designhub.dto.TrackingNumberDto;
 import com.michaels.designhub.dto.UtilsDto;
 import com.michaels.designhub.entity.TrainingLog;
 import com.michaels.designhub.request.SearchGSOAndLayoutOptimizationRequest;
 import com.michaels.designhub.response.SearchGSOAndLayoutOptimizationResponse;
+import com.michaels.designhub.response.TrackingNumberResponse;
 import com.michaels.designhub.service.impl.UtilsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -47,4 +50,9 @@ public class UtilsController {
         utilsService.exitTrainingLog(body.get("id"));
     }
 
+    @PostMapping("/utils/tracking-numbers")
+    public TrackingNumberResponse trackingNumbers(@RequestBody TrackingNumberDto trackingNumberDto){
+        return utilsService.updateTrackingNumbers(trackingNumberDto);
+
+    }
 }
