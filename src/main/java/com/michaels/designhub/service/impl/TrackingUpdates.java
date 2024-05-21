@@ -79,7 +79,7 @@ public class TrackingUpdates implements ItrackingUpdates {
 
 
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'");
-        LocalDateTime dateTime = LocalDateTime.parse(trackingNumberDto.getReceivedBy(), inputFormatter);
+        LocalDateTime dateTime = LocalDateTime.parse(trackingNumberDto.getReceivedAt(), inputFormatter);
 
         // Create a formatter to format with 3 milliseconds
         DateTimeFormatter outputFormatter = new DateTimeFormatterBuilder()
