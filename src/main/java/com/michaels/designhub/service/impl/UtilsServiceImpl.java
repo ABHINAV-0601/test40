@@ -252,12 +252,12 @@ public class UtilsServiceImpl implements UtilsService {
 
     @Override
     public TrackingNumberResponse updateTrackingNumbers(TrackingNumberDto trackingNumberDto) {
-        log.debug("Starting update of tracking numbers as received: {}", trackingNumberDto);
+        log.info("Starting update of tracking numbers as received: {}", trackingNumberDto);
 
         Object rawResult = trackingUpdate.getOrderTrackingMapping(trackingNumberDto);
         List<String> unsuccessfulUpdates = new ArrayList<>();
 
-        log.debug("Raw result from get_orders_by_tracking_numbers: {}", rawResult);
+        log.info("Raw result from get_orders_by_tracking_numbers: {}", rawResult);
 
         trackingUpdate.processTrackingNumbersUpdate(rawResult, trackingNumberDto, unsuccessfulUpdates);
 
