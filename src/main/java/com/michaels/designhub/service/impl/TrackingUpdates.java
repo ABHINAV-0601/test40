@@ -11,6 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,7 +76,22 @@ public class TrackingUpdates implements ItrackingUpdates {
 
         JSONObject updateParams = new JSONObject();
         updateParams.put("store_id", trackingNumberDto.getStoreId());
-        updateParams.put("received_by", trackingNumberDto.getReceivedBy());
+
+
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'");
+        LocalDateTime dateTime = LocalDateTime.parse(trackingNumberDto.getReceivedBy(), inputFormatter);
+
+        // Create a formatter to format with 3 milliseconds
+        DateTimeFormatter outputFormatter = new DateTimeFormatterBuilder()
+                .appendPattern("yyyy-MM-dd'T'HH:mm:ss")
+                .appendFraction(ChronoField.MILLI_OF_SECOND, 3, 3, true)
+                .appendLiteral('Z')
+                .toFormatter();
+
+        // Format the LocalDateTime to the desired string representation
+        String formattedDateTime = dateTime.format(outputFormatter);
+
+        updateParams.put("received_by", formattedDateTime);
         updateParams.put("received_at", trackingNumberDto.getReceivedAt());
         updateParams.put("order_lineitems", orderIds);
         updateParams.put("tracking_number", trackingNumber);
