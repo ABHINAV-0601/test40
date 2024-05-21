@@ -91,8 +91,9 @@ public class TrackingUpdates implements ItrackingUpdates {
         // Format the LocalDateTime to the desired string representation
         String formattedDateTime = dateTime.format(outputFormatter);
 
-        updateParams.put("received_by", formattedDateTime);
-        updateParams.put("received_at", trackingNumberDto.getReceivedAt());
+        updateParams.put("received_by", trackingNumberDto.getReceivedBy());
+
+        updateParams.put("received_at", formattedDateTime);
         updateParams.put("order_lineitems", orderIds);
         updateParams.put("tracking_number", trackingNumber);
         updateParams.put("received", true);
