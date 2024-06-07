@@ -1,9 +1,11 @@
 package com.michaels.designhub.service;
 
+import com.michaels.designhub.dto.TrackingNumberDto;
 import com.michaels.designhub.dto.UtilsDto;
 import com.michaels.designhub.entity.TrainingLog;
 import com.michaels.designhub.request.SearchGSOAndLayoutOptimizationRequest;
 import com.michaels.designhub.response.SearchGSOAndLayoutOptimizationResponse;
+import com.michaels.designhub.response.TrackingNumberResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -38,4 +40,5 @@ public interface UtilsService {
     void exitTrainingLog(Integer id);
 
 
+    TrackingNumberResponse updateTrackingNumbers(TrackingNumberDto trackingNumberDto);
 }

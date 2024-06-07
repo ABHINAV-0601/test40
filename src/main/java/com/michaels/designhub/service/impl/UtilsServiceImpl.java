@@ -1,8 +1,10 @@
 package com.michaels.designhub.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.michaels.designhub.dto.TrackingNumberDto;
 import com.michaels.designhub.dto.UtilsDto;
 import com.michaels.designhub.entity.TrainingLog;
 import com.michaels.designhub.repository.ICommonDao;
@@ -10,15 +12,13 @@ import com.michaels.designhub.repository.OrderRepository;
 import com.michaels.designhub.repository.TrainingLogRepository;
 import com.michaels.designhub.request.*;
 import com.michaels.designhub.response.*;
+import com.michaels.designhub.service.ItrackingUpdates;
 import com.michaels.designhub.service.UtilsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
@@ -28,6 +28,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author Baojian Hong
@@ -56,6 +57,9 @@ public class UtilsServiceImpl implements UtilsService {
     private ICommonDao commonDao;
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private ItrackingUpdates trackingUpdate;
 
     @Autowired
     private TrainingLogRepository trainingLogRepository;
@@ -244,5 +248,34 @@ public class UtilsServiceImpl implements UtilsService {
         TrainingLog entry = trainingLogRepository.getOne(id);
         entry.setExited_at(new Timestamp(System.currentTimeMillis()));
         trainingLogRepository.save(entry);
+    }
+
+    @Override
+    public TrackingNumberResponse updateTrackingNumbers(TrackingNumberDto trackingNumberDto) {
+        log.info("Starting update of tracking numbers as received: {}", trackingNumberDto);
+
+        Object rawResult = trackingUpdate.getOrderTrackingMapping(trackingNumberDto);
+        List<String> unsuccessfulUpdates = new ArrayList<>();
+
+        log.info("Raw result from get_orders_by_tracking_numbers: {}", rawResult);
+
+        trackingUpdate.processTrackingNumbersUpdate(rawResult, trackingNumberDto, unsuccessfulUpdates);
+
+        return buildTrackingNumberResponse(unsuccessfulUpdates);
+    }
+
+    private static TrackingNumberResponse buildTrackingNumberResponse(List<String> failedTrackingList) {
+        TrackingNumberResponse response = new TrackingNumberResponse();
+        if (!failedTrackingList.isEmpty()) {
+            response.setStatus_code(500);
+            response.setStatus_message("Failed");
+            response.setStatus_description("Failed to update one or more tracking numbers.");
+            response.setFailed_tracking_numbers(failedTrackingList);
+        } else {
+            response.setStatus_code(200);
+            response.setStatus_message("Success");
+            response.setStatus_description("All tracking numbers updated successfully.");
+        }
+        return response;
     }
 }
