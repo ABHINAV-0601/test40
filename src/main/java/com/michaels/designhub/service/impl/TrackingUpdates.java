@@ -5,7 +5,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.michaels.designhub.dto.TrackingNumberDto;
 import com.michaels.designhub.dto.UtilsDto;
+import com.michaels.designhub.entity.Store;
 import com.michaels.designhub.repository.ICommonDao;
+import com.michaels.designhub.repository.StoresRepository;
 import com.michaels.designhub.service.ItrackingUpdates;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,9 +28,14 @@ public class TrackingUpdates implements ItrackingUpdates {
     @Autowired
     private ICommonDao commonDao;
 
+    @Autowired
+    private StoresRepository storesRepository;
+
     @Override
     public Object getOrderTrackingMapping(TrackingNumberDto trackingNumberDto) {
-        String formattedFunctionParams = formatFunctionParams(trackingNumberDto.getStoreId(), trackingNumberDto.getTrackingNumbers());
+
+        List<String> newTrackingNumbers = getNewTrackingNumbers(trackingNumberDto.getTrackingNumbers(), trackingNumberDto.getStoreId());
+        String formattedFunctionParams = formatFunctionParams(trackingNumberDto.getStoreId(), newTrackingNumbers);
         UtilsDto utilsDto = createUtilsDto("get_orders_by_tracking_numbers", formattedFunctionParams);
         Object rawResult = null;
 
@@ -35,6 +43,37 @@ public class TrackingUpdates implements ItrackingUpdates {
         rawResult = commonDao.callFunction(utilsDto);
 
         return rawResult;
+    }
+
+    private List<String> getNewTrackingNumbers(List<String> trackingNumbers, String storeId) {
+        boolean isCanadaStore = checkIfCanadaStore(storeId);
+        List<String> newTrackingNumbers = new ArrayList<>();
+
+        for (String trackingNumber : trackingNumbers) {
+            newTrackingNumbers.add(
+                    formatTrackingNumber(trackingNumber, isCanadaStore)
+            );
+        }
+
+        return newTrackingNumbers;
+    }
+
+    // In case of CANADA - PUROLATOR, the scanned code is returning 9:5:9:10 characters (i.e 33)
+    // so if the size is greater than 26, splitting it to 14,23 and get the PIN
+    private String formatTrackingNumber(String trackingNumber, boolean isCanadaStore) {
+        if (isCanadaStore && trackingNumber.length() > 26) {
+            return "MYM" + trackingNumber.substring(15, 24).toUpperCase();
+        } else {
+            return trackingNumber.toUpperCase();
+        }
+    }
+
+    private boolean checkIfCanadaStore(String storeId) {
+        Store store = storesRepository.findStoreByStoreNumber(storeId);
+        if(store != null){
+            return store.getAddressCountry().equalsIgnoreCase("CA");
+        }
+        return false;
     }
 
     @Override
@@ -48,7 +87,7 @@ public class TrackingUpdates implements ItrackingUpdates {
 
                 JSONArray orderIds = result.getJSONArray("order_ids");
                 if (!updateOrderLineItems(trackingNumberDto, trackingNumber, orderIds)) {
-                    unsuccessfulUpdates.add(trackingNumber);
+                    unsuccessfulUpdates.add(trackingNumber.toUpperCase());
                 }
             });
         } else {
