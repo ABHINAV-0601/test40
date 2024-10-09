@@ -55,4 +55,34 @@ public class UtilsController {
         return utilsService.updateTrackingNumbers(trackingNumberDto);
 
     }
+
+    @GetMapping("/utils/storeNumber")
+    public String getStoreNumber(@RequestHeader(value = "X-Forwarded-For", required = false) String xForwardedFor,
+                             HttpServletRequest request) {
+
+        String clientIp;
+        if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
+            // X-Forwarded-For might contain multiple IPs, the first one is the client
+            clientIp = xForwardedFor.split(",")[0].trim();
+        } else {
+            clientIp = request.getRemoteAddr();
+        }
+        log.info("Client IP: " + clientIp);
+        return utilsService.getStoreNumber(clientIp);
+    }
+
+    @GetMapping("/utils/cloudStoreNumber")
+    public String getCloudStoreNumber(@RequestHeader(value = "X-Forwarded-For", required = false) String xForwardedFor,
+                             HttpServletRequest request) {
+
+        String clientIp;
+        if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
+            // X-Forwarded-For might contain multiple IPs, the first one is the client
+            clientIp = xForwardedFor.split(",")[0].trim();
+        } else {
+            clientIp = request.getRemoteAddr();
+        }
+        log.info("Client IP: " + clientIp);
+        return utilsService.getCloudStoreNumber(clientIp);
+    }
 }

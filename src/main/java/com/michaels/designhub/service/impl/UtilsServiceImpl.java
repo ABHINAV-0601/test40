@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.michaels.designhub.dto.TrackingNumberDto;
 import com.michaels.designhub.dto.UtilsDto;
 import com.michaels.designhub.entity.TrainingLog;
@@ -24,6 +25,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -277,5 +280,74 @@ public class UtilsServiceImpl implements UtilsService {
             response.setStatus_description("All tracking numbers updated successfully.");
         }
         return response;
+    }
+
+    public String getStoreNumber(String clientIp) {
+        String dnsServer = "10.4.10.16";
+        String hostname = reverseDnsLookup(clientIp, dnsServer);
+        if (hostname != null) {
+            return hostname.substring(0,4);
+        }
+        return "";
+    }
+
+    public String reverseDnsLookup(String ipAddress, String dnsServer) {
+        try {
+            // Perform reverse DNS lookup using Java's InetAddress class
+            InetAddress inetAddress = InetAddress.getByName(ipAddress);
+            return inetAddress.getCanonicalHostName();
+
+        } catch (UnknownHostException e) {
+            log.error("Hostname not found for this IP: {}" , ipAddress);
+            return null;
+        } catch (Exception e) {
+            log.error("Unexpected error during DNS lookup: {} " , e.getMessage());
+            return null;
+        }
+    }
+
+    public String getCloudStoreNumber(String clientIp) {
+        String apiUrl = "https://ns-lookup-711811349536.us-central1.run.app/resolve";  // Replace with the actual API endpoint
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        String payload = "{\"source_ip\": \"" + clientIp + "\"}";
+        HttpEntity<String> entity = new HttpEntity<>(payload, headers);
+
+        try {
+            // Call the external API with the source IP
+            ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, entity, String.class);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                // Parse the response to get the hostname
+                String responseBody = response.getBody();
+                String hostname = extractHostnameFromResponse(responseBody);
+
+                if (hostname != null && !hostname.isEmpty()) {
+                    // Return only the first 4 characters of the hostname
+                    return hostname.substring(0, Math.min(4, hostname.length()));
+
+                }
+                else {
+                    log.warn("Response body is null or empty");
+                }
+            }
+        } catch (Exception e) {
+            log.error("Hostname not found for this IP: {}" , clientIp);
+            return null;
+        }
+        return null;
+    }
+
+    // Helper method to extract hostname from JSON response (simple example)
+    private String extractHostnameFromResponse(String responseBody) {
+        // Assuming the response is JSON with a key 'hostname'
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode root = objectMapper.readTree(responseBody);
+            return root.path("hostname").asText();
+        } catch (Exception e) {
+            return null; // Handle parsing exceptions gracefully
+        }
     }
 }
