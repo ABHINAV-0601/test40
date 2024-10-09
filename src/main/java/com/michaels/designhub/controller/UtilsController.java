@@ -62,10 +62,13 @@ public class UtilsController {
 
         String clientIp;
         if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
+            log.error("xForwardedFor : {}", xForwardedFor);
             // X-Forwarded-For might contain multiple IPs, the first one is the client
             clientIp = xForwardedFor.split(",")[0].trim();
+            log.info("Client ip is :{}", clientIp);
         } else {
             clientIp = request.getRemoteAddr();
+            log.info("remote is :{}", clientIp);
         }
         log.info("Client IP: " + clientIp);
         return utilsService.getStoreNumber(clientIp);

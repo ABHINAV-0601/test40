@@ -285,6 +285,7 @@ public class UtilsServiceImpl implements UtilsService {
     public String getStoreNumber(String clientIp) {
         String dnsServer = "10.4.10.16";
         String hostname = reverseDnsLookup(clientIp, dnsServer);
+        log.info(hostname);
         if (hostname != null) {
             return hostname.substring(0,4);
         }
