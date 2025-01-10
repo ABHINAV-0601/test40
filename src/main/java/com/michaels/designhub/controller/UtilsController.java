@@ -55,4 +55,9 @@ public class UtilsController {
         return utilsService.updateTrackingNumbers(trackingNumberDto);
 
     }
+
+    @PostMapping("/utils/tracking-status-update")
+    public TrackingNumberResponse trackingNumbersStatusUpdate(@RequestBody TrackingNumberDto trackingNumberDto){
+        return utilsService.updateComponentStatusForTrackingNumbers(trackingNumberDto);
+    }
 }

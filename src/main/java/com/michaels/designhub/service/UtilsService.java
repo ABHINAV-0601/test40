@@ -41,4 +41,6 @@ public interface UtilsService {
 
 
     TrackingNumberResponse updateTrackingNumbers(TrackingNumberDto trackingNumberDto);
+
+    TrackingNumberResponse updateComponentStatusForTrackingNumbers(TrackingNumberDto trackingNumberDto);
 }

@@ -278,4 +278,32 @@ public class UtilsServiceImpl implements UtilsService {
         }
         return response;
     }
+
+    @Override
+    public TrackingNumberResponse updateComponentStatusForTrackingNumbers(TrackingNumberDto trackingNumberDto) {
+        try {
+            log.debug("Tracking numbers: {} ", trackingNumberDto.getTrackingNumbers());
+
+            int updateComponentStatusCount = orderRepository.updateComponentStatusForTrackingNumbers(trackingNumberDto.getTrackingNumbers(), trackingNumberDto.getReceivedBy());
+            log.debug("Updated component status for tracking numbers successfully with count:{} ", updateComponentStatusCount);
+
+            //fetch order lineitem number with tracking numbers
+            List<String> orderLineNumbersList = orderRepository.fetchOrderLineItemNumbersFromTrackingNumberList(trackingNumberDto.getTrackingNumbers());
+            log.debug("OrderLineItem numbers for tracking numbers : {}", orderLineNumbersList);
+            if (!orderLineNumbersList.isEmpty()) {
+                //fetch orderlineitems whose components are confirmed
+                List<String> finalOrderNumberList = orderRepository.fetchOrderLineItemNumbersWhenAllComponentsConfirmed(orderLineNumbersList);
+                log.debug("Final OrderLineItem numbers status to be updated are : {}", finalOrderNumberList);
+                if (!finalOrderNumberList.isEmpty()) {
+                    //update order status for the orderline numbers
+                    int updateOlStatusCount = orderRepository.updateOrderLineItemStatusByOrderLineItemNumbers(finalOrderNumberList, trackingNumberDto.getReceivedBy());
+                    log.debug("Updated order_lineitem status for tracking numbers successfully with count:{} ", updateOlStatusCount);
+                }
+            }
+        } catch (Exception e) {
+            log.error("Exception caused while updating due to : {} ", e.getMessage());
+            return buildTrackingNumberResponse(trackingNumberDto.getTrackingNumbers());
+        }
+        return buildTrackingNumberResponse(new ArrayList<>());
+    }
 }
