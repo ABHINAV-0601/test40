@@ -14,6 +14,7 @@ import com.michaels.designhub.request.*;
 import com.michaels.designhub.response.*;
 import com.michaels.designhub.service.ItrackingUpdates;
 import com.michaels.designhub.service.UtilsService;
+import com.michaels.designhub.utils.TrackingNumberValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -252,6 +253,14 @@ public class UtilsServiceImpl implements UtilsService {
 
     @Override
     public TrackingNumberResponse updateTrackingNumbers(TrackingNumberDto trackingNumberDto) {
+        // Validate the list of tracking numbers
+        List<String> invalidTrackingNumbers = TrackingNumberValidator.validateTrackingNumbers(trackingNumberDto.getTrackingNumbers());
+
+        if (!invalidTrackingNumbers.isEmpty()) {
+            // Return an error response if there are invalid tracking numbers
+            return buildTrackingNumberResponse(invalidTrackingNumbers);
+        }
+
         log.info("Starting update of tracking numbers as received: {}", trackingNumberDto);
 
         Object rawResult = trackingUpdate.getOrderTrackingMapping(trackingNumberDto);
@@ -282,6 +291,14 @@ public class UtilsServiceImpl implements UtilsService {
     @Override
     public TrackingNumberResponse updateComponentStatusForTrackingNumbers(TrackingNumberDto trackingNumberDto) {
         try {
+            // Validate the list of tracking numbers
+            List<String> invalidTrackingNumbers = TrackingNumberValidator.validateTrackingNumbers(trackingNumberDto.getTrackingNumbers());
+
+            if (!invalidTrackingNumbers.isEmpty()) {
+                // Return an error response if there are invalid tracking numbers
+                return buildTrackingNumberResponse(invalidTrackingNumbers);
+            }
+
             log.debug("Tracking numbers: {} ", trackingNumberDto.getTrackingNumbers());
 
             int updateComponentStatusCount = orderRepository.updateComponentStatusForTrackingNumbers(trackingNumberDto.getTrackingNumbers(), trackingNumberDto.getReceivedBy());

@@ -35,9 +35,9 @@ public class UtilsController {
     }
 
     @PostMapping("/utils")
-    public Map<String,Object> utils(@RequestBody UtilsDto utilsDto, HttpServletRequest httpServletRequest) {
-        log.debug("In Utils and calling function - {}, with function params - {}", utilsDto.getFunctionName(), utilsDto.getFunctionParams());
-        return utilsService.utils(utilsDto,httpServletRequest);
+    public Map<String, Object> utils(@RequestBody UtilsDto utilsDto, HttpServletRequest httpServletRequest) {
+        log.debug("In Utils and calling function  and function params - {}", utilsDto);
+        return utilsService.utils(utilsDto, httpServletRequest);
     }
 
     @PostMapping("/utils/training")
@@ -51,13 +51,13 @@ public class UtilsController {
     }
 
     @PostMapping("/utils/tracking-numbers")
-    public TrackingNumberResponse trackingNumbers(@RequestBody TrackingNumberDto trackingNumberDto){
+    public TrackingNumberResponse trackingNumbers(@RequestBody TrackingNumberDto trackingNumberDto) {
         return utilsService.updateTrackingNumbers(trackingNumberDto);
 
     }
 
     @PostMapping("/utils/tracking-status-update")
-    public TrackingNumberResponse trackingNumbersStatusUpdate(@RequestBody TrackingNumberDto trackingNumberDto){
+    public TrackingNumberResponse trackingNumbersStatusUpdate(@RequestBody TrackingNumberDto trackingNumberDto) {
         return utilsService.updateComponentStatusForTrackingNumbers(trackingNumberDto);
     }
 }
