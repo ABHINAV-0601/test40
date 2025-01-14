@@ -25,9 +25,13 @@ public class CommonDao implements ICommonDao {
     @Override
     public Object callFunction(UtilsDto utilsDto) {
         try {
-            StringBuilder nativeQuery = new StringBuilder("select " + utilsDto.getFunctionName());
+            String functionName = utilsDto.getFunctionName();
+            // Validate the function name (this can be done through a whitelist approach)
+            if (!isValidFunctionName(functionName)) {
+                throw new IllegalArgumentException("Invalid function name.");
+            }
+            StringBuilder nativeQuery = new StringBuilder("select " + functionName +"(");
             String functionalParams = utilsDto.getFunctionParams();
-            nativeQuery.append("(");
             // Add parameter placeholders for the function's parameters.
             if (Objects.nonNull(functionalParams)) {
                 // Split parameters into individual elements if needed
