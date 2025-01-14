@@ -28,17 +28,42 @@ public class CommonDao implements ICommonDao {
             StringBuilder nativeQuery = new StringBuilder("select " + utilsDto.getFunctionName());
             String functionalParams = utilsDto.getFunctionParams();
             nativeQuery.append("(");
+            // Add parameter placeholders for the function's parameters.
             if (Objects.nonNull(functionalParams)) {
-                nativeQuery.append(functionalParams);
+                // Split parameters into individual elements if needed
+                String[] params = functionalParams.split(",");
+                for (int i = 0; i < params.length; i++) {
+                    if (i > 0) {
+                        nativeQuery.append(", ");
+                    }
+                    nativeQuery.append("?");
+                }
             }
             nativeQuery.append(")");
 
             Query query = entityManager.createNativeQuery(nativeQuery.toString());
 
+            // Bind the parameters securely (use the actual params in functionalParams)
+            if (Objects.nonNull(functionalParams)) {
+                String[] params = functionalParams.split(",");
+                for (int i = 0; i < params.length; i++) {
+                    query.setParameter(i + 1, params[i].trim()); // Bind parameter values safely
+                }
+            }
+
             return query.getSingleResult();
 
-        }catch (Exception e){
-            throw new RuntimeException("Exception occurred while calling Utils API with is_a_function="+utilsDto.getIsFunction()+", function_name="+utilsDto.getFunctionName()+" ,function_params="+utilsDto.getFunctionParams(),e);
+        } catch (Exception e) {
+            throw new RuntimeException("Exception occurred while calling Utils API with is_a_function=" + utilsDto.getIsFunction() + ", function_name=" + utilsDto.getFunctionName() + " ,function_params=" + utilsDto.getFunctionParams(), e);
         }
     }
+
+
+    // Example validation method for the function name to ensure it's safe
+    private boolean isValidFunctionName(String functionName) {
+        // Add any necessary validation logic here
+        // For example, check that the function name only contains valid characters
+        return functionName != null && functionName.matches("[a-zA-Z_][a-zA-Z0-9_]*");
+    }
+
 }
