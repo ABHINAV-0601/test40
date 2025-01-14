@@ -38,7 +38,7 @@ public class UtilsController {
 
     @PostMapping("/utils")
     public Map<String, Object> utils(@RequestBody UtilsDto utilsDto, HttpServletRequest httpServletRequest) {
-        return utilsService.utils(utilsDto, httpServletRequest);
+        return utilsService.utils(encodeDto(utilsDto), httpServletRequest);
     }
 
     @PostMapping("/utils/training")
@@ -53,13 +53,13 @@ public class UtilsController {
 
     @PostMapping("/utils/tracking-numbers")
     public TrackingNumberResponse trackingNumbers(@RequestBody TrackingNumberDto trackingNumberDto) {
-        return utilsService.updateTrackingNumbers(trackingNumberDto);
+        return utilsService.updateTrackingNumbers(encodeDto(trackingNumberDto));
 
     }
 
     @PostMapping("/utils/tracking-status-update")
     public TrackingNumberResponse trackingNumbersStatusUpdate(@RequestBody TrackingNumberDto trackingNumberDto) {
-        return utilsService.updateComponentStatusForTrackingNumbers(trackingNumberDto);
+        return utilsService.updateComponentStatusForTrackingNumbers(encodeDto(trackingNumberDto));
     }
 
     // Generic method to encode HTML for all String fields in a DTO
