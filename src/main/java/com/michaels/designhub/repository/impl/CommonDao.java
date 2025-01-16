@@ -30,30 +30,14 @@ public class CommonDao implements ICommonDao {
             if (!isValidFunctionName(functionName)) {
                 throw new IllegalArgumentException("Invalid function name.");
             }
-            StringBuilder nativeQuery = new StringBuilder("select " + functionName +"(");
-            String functionalParams = utilsDto.getFunctionParams();
-            // Add parameter placeholders for the function's parameters.
-            if (Objects.nonNull(functionalParams)) {
-                // Split parameters into individual elements if needed
-                String[] params = functionalParams.split(",");
-                for (int i = 0; i < params.length; i++) {
-                    if (i > 0) {
-                        nativeQuery.append(", ");
-                    }
-                    nativeQuery.append("?");
-                }
-            }
-            nativeQuery.append(")");
+//            StringBuilder nativeQuery = new StringBuilder("select " + functionName +"(");
+            
+            String functionalParams = utilsDto.getFunctionParams()==null?"":utilsDto.getFunctionParams();
+            String queryString = "select " + functionName +"(" +functionalParams+ ")";
 
-            Query query = entityManager.createNativeQuery(nativeQuery.toString());
+//            Query query = entityManager.createNativeQuery(nativeQuery.toString());
+            Query query = entityManager.createNativeQuery(queryString);
 
-            // Bind the parameters securely (use the actual params in functionalParams)
-            if (Objects.nonNull(functionalParams)) {
-                String[] params = functionalParams.split(",");
-                for (int i = 0; i < params.length; i++) {
-                    query.setParameter(i + 1, params[i].trim()); // Bind parameter values safely
-                }
-            }
 
             return query.getSingleResult();
 
