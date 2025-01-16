@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.michaels.designhub.dto.TrackingNumberDto;
 import com.michaels.designhub.dto.UtilsDto;
 import com.michaels.designhub.entity.Store;
+import com.michaels.designhub.repository.CommonDaoRepo;
 import com.michaels.designhub.repository.ICommonDao;
 import com.michaels.designhub.repository.StoresRepository;
 import com.michaels.designhub.service.ItrackingUpdates;
@@ -27,6 +28,8 @@ public class TrackingUpdates implements ItrackingUpdates {
 
     @Autowired
     private ICommonDao commonDao;
+    @Autowired
+    private CommonDaoRepo commonDaoRepo;
 
     @Autowired
     private StoresRepository storesRepository;
@@ -35,12 +38,15 @@ public class TrackingUpdates implements ItrackingUpdates {
     public Object getOrderTrackingMapping(TrackingNumberDto trackingNumberDto) {
 
         List<String> newTrackingNumbers = getNewTrackingNumbers(trackingNumberDto.getTrackingNumbers(), trackingNumberDto.getStoreId());
-        String formattedFunctionParams = formatFunctionParams(trackingNumberDto.getStoreId(), newTrackingNumbers);
-        UtilsDto utilsDto = createUtilsDto("get_orders_by_tracking_numbers", formattedFunctionParams);
+//        String formattedFunctionParams = formatFunctionParams(trackingNumberDto.getStoreId(), newTrackingNumbers);
+//        UtilsDto utilsDto = createUtilsDto("get_orders_by_tracking_numbers", formattedFunctionParams);
         Object rawResult = null;
 
-        log.debug("Calling get_orders_by_tracking_numbers with UtilsDto: {}", utilsDto);
-        rawResult = commonDao.callFunction(utilsDto);
+//        log.debug("Calling get_orders_by_tracking_numbers with UtilsDto: {}", utilsDto);
+//        rawResult = commonDao.callFunction(utilsDto);
+
+        String trackingNumbersStr = "{" + String.join(",", newTrackingNumbers) + "}";
+        rawResult = commonDaoRepo.getOrdersByTrackingNumbersFunction(trackingNumberDto.getStoreId(), trackingNumbersStr);
 
         return rawResult;
     }
@@ -137,11 +143,13 @@ public class TrackingUpdates implements ItrackingUpdates {
         updateParams.put("tracking_number", trackingNumber);
         updateParams.put("received", true);
 
-        String formattedUpdateParams = "'" + updateParams.toJSONString() + "'";
-        UtilsDto updateDto = createUtilsDto("update_order_lineitem_shipping", formattedUpdateParams);
+//        String formattedUpdateParams = "'" + updateParams.toJSONString() + "'";
+//        UtilsDto updateDto = createUtilsDto("update_order_lineitem_shipping", formattedUpdateParams);
 
-        log.debug("Updating order line items with: {}", updateDto);
-        Object updateResponse = commonDao.callFunction(updateDto);
+//        log.debug("Updating order line items with: {}", updateDto);
+//        Object updateResponse = commonDao.callFunction(updateDto);
+        Object updateResponse = commonDaoRepo.updateOrderLineItemShippingFunction(updateParams.toJSONString());
+
         log.debug("Update response: {}", updateResponse);
 
         JSONObject jsonResponse = JSON.parseObject(updateResponse.toString());
