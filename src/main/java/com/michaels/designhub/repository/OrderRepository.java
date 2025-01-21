@@ -33,7 +33,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     value = "update order_lineitem_component_tracking set component_status = 6, \n" +
             "updated_at = current_date, \n" +
             "updated_user = :receivedBy, \n" +
-            "updated_prc = 'SYSTEM' \n" +
+            "updated_prc = 'MARTI' \n" +
             "where tracking_number in ( :trackingNumbers ) and component_status != 6" )
     int updateComponentStatusForTrackingNumbers(List<String> trackingNumbers, String receivedBy);
 
@@ -76,7 +76,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
                     "order_lineitem_status_code = 'received',\n" +
                     "update_at = now(), \n" +
                     "update_user = :receivedBy, \n" +
-                    "update_prc = 'SYSTEM' \n" +
+                    "update_prc = 'DH' \n" +
                     "where order_lineitem_number in (:orderLineItemNumbers) \n" +
                     "and order_lineitem_status_code = 'waiting'")
     int updateOrderLineItemStatusByOrderLineItemNumbers(List<String> orderLineItemNumbers,String receivedBy);
